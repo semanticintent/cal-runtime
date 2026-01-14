@@ -1,0 +1,27 @@
+-- ================================================
+-- Cormorant Agentic Language (CAL)
+-- Example: Tailwind CSS Cascade Analysis
+-- ================================================
+
+-- Find affected entities with high urgency signals
+FORAGE entities
+WHERE sound > 7
+AND impact = "high"
+ACROSS D1, D2, D3, D5, D6
+DEPTH 3
+SURFACE cascade_map
+
+-- Deep dive into revenue dimension
+DIVE INTO revenue
+WHEN decline > 80
+TRACE cascade
+EMIT financial_impact
+
+-- Monitor for ongoing signals
+PERCH ON segment:"open-source"
+LISTEN FOR disruption signals, churn signals
+WAKE AFTER 30d
+CHIRP warning
+
+-- Output final analysis
+SURFACE report AS json

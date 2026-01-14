@@ -1,0 +1,9 @@
+-- ================================================
+-- Cormorant Agentic Language (CAL)
+-- Example: Simple Entity Query
+-- ================================================
+
+-- Find all high-impact entities
+FORAGE entities
+WHERE impact = "high"
+SURFACE results

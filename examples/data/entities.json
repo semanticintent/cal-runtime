@@ -1,0 +1,101 @@
+{
+  "entities": [
+    {
+      "id": "tailwind-css",
+      "name": "Tailwind CSS",
+      "type": "entities",
+      "category": "open-source-project",
+      "sound": 9,
+      "space": 8,
+      "time": 9,
+      "segment": "open-source",
+      "impact": "high",
+      "baseCost": 300000,
+      "currency": "USD",
+      "metadata": {
+        "downloads": 75000000,
+        "employees_before": 4,
+        "employees_after": 1,
+        "revenue_decline": 0.80,
+        "traffic_decline": 0.40
+      },
+      "dimensions": {
+        "D1": { "sound": 5, "space": 6, "time": 7, "notes": "Customer trust damaged" },
+        "D2": { "sound": 9, "space": 8, "time": 8, "notes": "75% layoffs, knowledge loss" },
+        "D3": { "sound": 9, "space": 9, "time": 8, "notes": "80% revenue decline" },
+        "D5": { "sound": 6, "space": 7, "time": 5, "notes": "Skeleton crew for 75M downloads" },
+        "D6": { "sound": 9, "space": 8, "time": 8, "notes": "AI broke discovery funnel" }
+      }
+    },
+    {
+      "id": "stack-overflow",
+      "name": "Stack Overflow",
+      "type": "entities",
+      "category": "tech-platform",
+      "sound": 7,
+      "space": 7,
+      "time": 7,
+      "segment": "enterprise",
+      "impact": "high",
+      "baseCost": 500000,
+      "currency": "USD",
+      "metadata": {
+        "traffic_decline": 0.35,
+        "layoff_percentage": 0.28,
+        "pivot": "enterprise"
+      },
+      "dimensions": {
+        "D1": { "sound": 7, "space": 7, "time": 6, "notes": "User migration to AI tools" },
+        "D2": { "sound": 8, "space": 7, "time": 7, "notes": "Multiple layoff rounds" },
+        "D3": { "sound": 7, "space": 8, "time": 7, "notes": "Ad revenue down, pivoting" },
+        "D5": { "sound": 6, "space": 6, "time": 6, "notes": "Content quality concerns" },
+        "D6": { "sound": 7, "space": 7, "time": 7, "notes": "Business model shift" }
+      }
+    },
+    {
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
+      "type": "entities",
+      "category": "ai-tool",
+      "sound": 8,
+      "space": 9,
+      "time": 8,
+      "segment": "enterprise",
+      "impact": "high",
+      "baseCost": 0,
+      "currency": "USD",
+      "metadata": {
+        "users": 1500000,
+        "growth": "accelerating",
+        "disruption_type": "enabler"
+      },
+      "dimensions": {
+        "D1": { "sound": 8, "space": 9, "time": 8, "notes": "Developer adoption high" },
+        "D2": { "sound": 6, "space": 7, "time": 6, "notes": "Internal growth" },
+        "D3": { "sound": 8, "space": 8, "time": 8, "notes": "Subscription revenue" },
+        "D5": { "sound": 7, "space": 8, "time": 7, "notes": "Quality improvements" },
+        "D6": { "sound": 8, "space": 9, "time": 8, "notes": "Operational scaling" }
+      }
+    },
+    {
+      "id": "stable-company",
+      "name": "Stable Enterprise Co",
+      "type": "entities",
+      "category": "enterprise",
+      "sound": 3,
+      "space": 4,
+      "time": 3,
+      "segment": "enterprise",
+      "impact": "low",
+      "baseCost": 100000,
+      "currency": "USD",
+      "dimensions": {
+        "D1": { "sound": 3, "space": 3, "time": 3, "notes": "Stable customer base" },
+        "D2": { "sound": 4, "space": 4, "time": 3, "notes": "Low turnover" },
+        "D3": { "sound": 3, "space": 3, "time": 4, "notes": "Steady revenue" },
+        "D5": { "sound": 4, "space": 3, "time": 3, "notes": "Consistent quality" },
+        "D6": { "sound": 3, "space": 4, "time": 3, "notes": "Stable operations" }
+      }
+    }
+  ]
+}

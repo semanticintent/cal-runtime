@@ -1,0 +1,17 @@
+-- ================================================
+-- Cormorant Agentic Language (CAL)
+-- Example: DRIFT Gap Analysis
+-- ================================================
+
+-- Find entities for analysis
+FORAGE entities
+WHERE sound > 5
+SURFACE target_entities
+
+-- Measure methodology-performance gap
+DRIFT target_entities
+METHODOLOGY 85
+PERFORMANCE 40
+
+-- Alert if gap is significant
+CHIRP warning "Significant DRIFT detected in target entities"

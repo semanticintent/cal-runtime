@@ -1,0 +1,42 @@
+-- ================================================
+-- Cormorant Agentic Language (CAL)
+-- Example: Full Closed-Loop Intelligence Pipeline
+--
+-- Sense → Analyze → Measure → Decide → Act
+-- ================================================
+
+-- LAYER 1: SENSE
+-- Find affected entities with high urgency signals
+FORAGE entities
+WHERE sound > 7
+AND impact = "high"
+ACROSS D1, D2, D3, D5, D6
+DEPTH 3
+SURFACE cascade_map
+
+-- LAYER 2: ANALYZE
+-- Deep dive into the cascade
+DIVE INTO revenue
+WHEN decline > 50
+TRACE cascade
+EMIT impact_analysis
+
+-- LAYER 3: MEASURE (DRIFT)
+-- Measure the gap between methodology and performance
+DRIFT cascade_map
+METHODOLOGY 85
+PERFORMANCE 35
+
+-- LAYER 4: DECIDE (FETCH)
+-- Determine action based on Fetch score
+-- Fetch = Chirp × |DRIFT| × Confidence
+FETCH cascade_map
+THRESHOLD 1000
+ON EXECUTE CHIRP critical "Immediate action required - cascade in progress"
+ON CONFIRM CHIRP warning "Review recommended before action"
+ON QUEUE SURFACE queue_report
+ON WAIT PERCH ON segment:"monitor"
+
+-- LAYER 5: ACT
+-- Output final results
+SURFACE results AS json
