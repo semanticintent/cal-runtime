@@ -30,6 +30,8 @@ Program
 Statement
   = ForageStatement
   / DiveStatement
+  / DriftStatement
+  / FetchStatement
   / PerchStatement
   / ListenStatement
   / WakeStatement
@@ -107,6 +109,90 @@ TraceClause
 EmitClause
   = EMIT _ output:Identifier _ {
       return { emit: output };
+    }
+
+// ============================================
+// DRIFT - Measure gap between methodology and performance
+// ============================================
+
+DriftStatement
+  = DRIFT _ target:Identifier _ clauses:DriftClauses+ _ {
+      return {
+        type: "Drift",
+        target: target,
+        ...Object.assign({}, ...clauses)
+      };
+    }
+
+DriftClauses
+  = MethodologyClause
+  / PerformanceClause
+  / GapClause
+
+MethodologyClause
+  = METHODOLOGY _ score:Integer _ {
+      return { methodology: score };
+    }
+
+PerformanceClause
+  = PERFORMANCE _ score:Integer _ {
+      return { performance: score };
+    }
+
+GapClause
+  = GAP _ gapType:Identifier _ {
+      return { gap: gapType };
+    }
+
+// ============================================
+// FETCH - Action decision layer
+// ============================================
+
+FetchStatement
+  = FETCH _ target:Identifier _ clauses:FetchClauses+ _ {
+      return {
+        type: "Fetch",
+        target: target,
+        ...Object.assign({}, ...clauses)
+      };
+    }
+
+FetchClauses
+  = ThresholdClause
+  / ConfidenceClause
+  / OnExecuteClause
+  / OnConfirmClause
+  / OnQueueClause
+  / OnWaitClause
+
+ThresholdClause
+  = THRESHOLD _ value:Integer _ {
+      return { threshold: value };
+    }
+
+ConfidenceClause
+  = CONFIDENCE _ value:Integer _ {
+      return { confidence: value };
+    }
+
+OnExecuteClause
+  = ON _ EXECUTE _ action:Statement _ {
+      return { onExecute: action };
+    }
+
+OnConfirmClause
+  = ON _ CONFIRM _ action:Statement _ {
+      return { onConfirm: action };
+    }
+
+OnQueueClause
+  = ON _ QUEUE _ action:Statement _ {
+      return { onQueue: action };
+    }
+
+OnWaitClause
+  = ON _ WAIT _ action:Statement _ {
+      return { onWait: action };
     }
 
 // ============================================
@@ -358,6 +444,8 @@ Identifier
 FORAGE = "FORAGE"i
 DIVE = "DIVE"i
 INTO = "INTO"i
+DRIFT = "DRIFT"i
+FETCH = "FETCH"i
 PERCH = "PERCH"i
 ON = "ON"i
 LISTEN = "LISTEN"i
@@ -379,6 +467,15 @@ AND = "AND"i
 OR = "OR"i
 IS = "IS"i
 NOT = "NOT"i
+METHODOLOGY = "METHODOLOGY"i
+PERFORMANCE = "PERFORMANCE"i
+GAP = "GAP"i
+THRESHOLD = "THRESHOLD"i
+CONFIDENCE = "CONFIDENCE"i
+EXECUTE = "EXECUTE"i
+CONFIRM = "CONFIRM"i
+QUEUE = "QUEUE"i
+WAIT = "WAIT"i
 
 // ============================================
 // WHITESPACE & COMMENTS
