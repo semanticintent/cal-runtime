@@ -1,0 +1,57 @@
+{
+  "name": "@stratiqx/cal-runtime",
+  "version": "0.1.0",
+  "description": "Cormorant Agentic Language (CAL) - Runtime execution engine for cascade analysis",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui",
+    "build": "npm run build:grammar && npm run build:code",
+    "build:grammar": "peggy -o src/parser/grammar.js src/parser/grammar.pegjs",
+    "build:code": "tsc && rollup -c",
+    "dev": "vitest watch",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "validate": "npm run lint && npm test"
+  },
+  "keywords": [
+    "cal",
+    "cascade-analysis",
+    "cormorant",
+    "6d-framework",
+    "drift",
+    "fetch",
+    "dsl"
+  ],
+  "author": "Michael Shatny",
+  "license": "MIT",
+  "dependencies": {
+    "peggy": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "@vitest/coverage-v8": "^1.2.0",
+    "@vitest/ui": "^1.2.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "rollup": "^4.9.6",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/semanticintent/cal-runtime"
+  }
+}
