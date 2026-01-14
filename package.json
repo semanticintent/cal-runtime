@@ -6,6 +6,9 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "type": "module",
+  "bin": {
+    "cal": "./bin/cal.js"
+  },
   "scripts": {
     "test": "vitest",
     "test:coverage": "vitest --coverage",
@@ -47,6 +50,7 @@
   },
   "files": [
     "dist",
+    "bin",
     "src",
     "README.md",
     "LICENSE"
