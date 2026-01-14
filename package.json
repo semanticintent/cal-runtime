@@ -12,11 +12,12 @@
     "test:ui": "vitest --ui",
     "build": "npm run build:grammar && npm run build:code",
     "build:grammar": "peggy -o src/parser/grammar.js src/parser/grammar.pegjs",
-    "build:code": "tsc && rollup -c",
+    "build:code": "tsc",
+    "typecheck": "tsc --noEmit",
     "dev": "vitest watch",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "validate": "npm run lint && npm test"
+    "validate": "npm run typecheck && npm run lint && npm test"
   },
   "keywords": [
     "cal",

@@ -36,6 +36,7 @@ yarn-error.log*
 # Temp files
 *.tmp
 .cache/
+tmpclaude-*
 
 # Generated files
 src/parser/grammar.js
