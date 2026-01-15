@@ -354,12 +354,14 @@ export function analyze6D(
     dimensions?: DimensionID[];
     depth?: number;
     baseCost?: number;
+    origin?: { dimension: DimensionID; trigger?: string };
   } = {}
 ): CascadeAnalysis {
   const {
     dimensions = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6'],
     depth = 2,
-    baseCost = 0
+    baseCost = 0,
+    origin
   } = options;
 
   const analysis: CascadeAnalysis = {
@@ -439,7 +441,7 @@ export function analyze6D(
   }
 
   // Generate cascade pathways
-  analysis.cascades = generateCascadePathways(analysis, depth);
+  analysis.cascades = generateCascadePathways(analysis, depth, origin);
 
   return Object.freeze(analysis) as CascadeAnalysis;
 }
@@ -484,7 +486,8 @@ const CASCADE_MAP: Record<DimensionID, DimensionID[]> = Object.freeze({
  */
 export function generateCascadePathways(
   analysis: CascadeAnalysis,
-  depth: number
+  depth: number,
+  explicitOrigin?: { dimension: DimensionID; trigger?: string }
 ): CascadePathway[] {
   const pathways: CascadePathway[] = [];
 
@@ -495,8 +498,16 @@ export function generateCascadePathways(
 
   if (affectedDims.length === 0) return pathways;
 
-  // Origin is highest scoring dimension
-  const [originId, origin] = affectedDims[0];
+  // Use explicit origin if provided, otherwise auto-detect from highest score
+  let originId: string;
+  let origin: DimensionAnalysis;
+
+  if (explicitOrigin && analysis.dimensions[explicitOrigin.dimension]) {
+    originId = explicitOrigin.dimension;
+    origin = analysis.dimensions[explicitOrigin.dimension];
+  } else {
+    [originId, origin] = affectedDims[0];
+  }
 
   // Build pathway from origin
   const pathway: CascadePathway = {

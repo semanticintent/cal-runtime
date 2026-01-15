@@ -260,7 +260,8 @@ export class Executor {
       return analyze6D(entity, {
         dimensions: dimIds,
         depth: cascadeDepth || 2,
-        baseCost: entity.baseCost || 0
+        ...(entity.baseCost !== undefined && { baseCost: entity.baseCost }),
+        ...(entity.metadata?.origin && { origin: entity.metadata.origin })
       });
     });
 
@@ -297,7 +298,8 @@ export class Executor {
     const analyses = entities.map((entity) => {
       const analysis = analyze6D(entity, {
         depth: 3,
-        baseCost: entity.baseCost || 0
+        ...(entity.baseCost !== undefined && { baseCost: entity.baseCost }),
+        ...(entity.metadata?.origin && { origin: entity.metadata.origin })
       });
 
       return analysis;
