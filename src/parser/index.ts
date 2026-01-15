@@ -177,10 +177,17 @@ function transformStatement(stmt: Statement, plan: ActionPlan): void {
 // ============================================
 
 function transformForage(stmt: ForageStatement, plan: ActionPlan): void {
+  // Transform filter format from grammar (left/right) to data adapter (field/value)
+  const transformedFilters = (stmt.where || []).map((filter: any) => ({
+    field: filter.left,      // Grammar uses "left" for field name
+    operator: filter.operator,
+    value: filter.right      // Grammar uses "right" for comparison value
+  }));
+
   plan.actions.push({
     action: 'query',
     target: stmt.target,
-    filters: stmt.where || [],
+    filters: transformedFilters,
     dimensions: stmt.across || [],
     cascadeDepth: stmt.depth || 1,
     output: stmt.surface || 'results'
