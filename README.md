@@ -2,6 +2,7 @@
 
 **Cormorant Agentic Language (CAL) — Runtime Execution Engine**
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18905193.svg)](https://doi.org/10.5281/zenodo.18905193)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A deterministic execution engine for cascade analysis using the Cormorant Foraging methodology and 6D dimensional framework.
@@ -112,6 +113,7 @@ If you use CAL Runtime in your work, please cite:
   year = {2026},
   publisher = {Zenodo},
   url = {https://github.com/semanticintent/cal-runtime},
+  doi = {10.5281/zenodo.18905193},
   note = {ORCID: 0009-0006-2011-3258}
 }
 ```

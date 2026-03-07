@@ -8,6 +8,7 @@ authors:
     orcid: "https://orcid.org/0009-0006-2011-3258"
 repository-code: "https://github.com/semanticintent/cal-runtime"
 url: "https://cal.cormorantforaging.dev"
+doi: "10.5281/zenodo.18905193"
 abstract: >-
   CAL (Cormorant Agentic Language) Runtime is a deterministic execution engine
   for cascade analysis using the Cormorant Foraging methodology. It provides a
