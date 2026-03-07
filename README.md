@@ -1,12 +1,14 @@
-# 🪶 CAL Runtime
+# CAL Runtime
 
-**Cormorant Agentic Language (CAL) - Runtime Execution Engine**
+**Cormorant Agentic Language (CAL) — Runtime Execution Engine**
 
-A deterministic execution engine for cascade analysis using the 6D Foraging Methodology.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A deterministic execution engine for cascade analysis using the Cormorant Foraging methodology and 6D dimensional framework.
 
 ## What is CAL?
 
-CAL is a domain-specific language for finding hidden costs through cascade analysis. It turns methodology into executable code.
+CAL is a domain-specific language for finding hidden costs through cascade analysis. It turns methodology into executable code — keywords ARE the framework.
 
 ```cal
 -- Find high-urgency situations
@@ -27,11 +29,19 @@ THRESHOLD 1000
 ON EXECUTE CHIRP critical "Take action"
 ```
 
-## Installation
+## Features
 
-```bash
-npm install @stratiqx/cal-runtime
-```
+- Methodology-native keywords (FORAGE, DRIFT, FETCH, CHIRP, PERCH, WAKE)
+- 6D dimension analysis (Customer, Employee, Revenue, Regulatory, Quality, Operational)
+- 3D Lens scoring (Sound x Space x Time)
+- DRIFT gap measurement (Methodology - Performance)
+- Fetch action decisions with multiplicative gating
+- Cascade pathway mapping with depth control
+- Financial impact calculation with cascade multipliers
+- Pluggable data adapters (JSON, memory, composite)
+- Pluggable alert adapters (console, file, webhook)
+- CLI tool for script execution
+- 192 passing tests across 8 test suites
 
 ## Quick Start
 
@@ -55,32 +65,18 @@ const output = await execute(result.actionPlan, {
 console.log(output.results);
 ```
 
-## Project Status
+## Architecture
 
-**Phase 1: Validation & Stabilization** (Current)
-
-- [ ] Parser validation
-- [ ] Executor validation
-- [ ] End-to-end testing
-- [ ] Financial model documentation
-
-See [CAL-IMPLEMENTATION-ANALYSIS.md](../cal/docs/CAL-IMPLEMENTATION-ANALYSIS.md) for full roadmap.
-
-## Features
-
-- ✅ Methodology-native keywords (FORAGE, DRIFT, FETCH)
-- ✅ 6D dimension analysis
-- ✅ 3D Lens scoring (Sound × Space × Time)
-- ✅ DRIFT gap measurement
-- ✅ Fetch action decisions
-- ✅ Cascade pathway mapping
-- ✅ Financial impact calculation
+```
+CAL Script → Parser (Peggy) → ActionPlan → Executor → Results
+                                              ↓
+                                    Data Adapters + Alert Adapters
+```
 
 ## Documentation
 
-- [Language Reference](https://cal.cormorantforaging.dev)
+- [Language Specification](https://cal.cormorantforaging.dev)
 - [API Documentation](./docs/API.md)
-- [Testing Guide](./docs/TESTING.md)
 - [Architecture](./docs/ARCHITECTURE.md)
 
 ## Development
@@ -94,17 +90,37 @@ npm test
 
 # Build
 npm run build
-
-# Watch mode
-npm run dev
 ```
+
+## Ecosystem
+
+CAL Runtime is the execution engine for the Cormorant Foraging Framework:
+
+- [Cormorant Foraging Framework](https://cormorantforaging.dev) — Foundational methodology
+- [CAL Language Specification](https://cal.cormorantforaging.dev) — Language reference
+- [6D Foraging Methodology](https://6d.cormorantforaging.dev) — Dimensional analysis
+- [StratIQX](https://stratiqx.com) — Case studies and analysis platform
+
+## Citation
+
+If you use CAL Runtime in your work, please cite:
+
+```bibtex
+@misc{shatny2026cal,
+  author = {Shatny, Michael},
+  title = {CAL Runtime: Cormorant Agentic Language Execution Engine},
+  year = {2026},
+  publisher = {Zenodo},
+  url = {https://github.com/semanticintent/cal-runtime},
+  note = {ORCID: 0009-0006-2011-3258}
+}
+```
+
+## Author
+
+**Michael Shatny**
+ORCID: [0009-0006-2011-3258](https://orcid.org/0009-0006-2011-3258)
 
 ## License
 
-MIT © Michael Shatny
-
-## Links
-
-- [6D Methodology](https://6d.cormorantforaging.dev)
-- [Cormorant Foraging](https://cormorantforaging.dev)
-- [StratIQX](https://stratiqx.com)
+MIT

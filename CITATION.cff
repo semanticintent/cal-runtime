@@ -1,0 +1,55 @@
+cff-version: 1.2.0
+title: "CAL Runtime: Cormorant Agentic Language Execution Engine"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+authors:
+  - family-names: Shatny
+    given-names: Michael
+    orcid: "https://orcid.org/0009-0006-2011-3258"
+repository-code: "https://github.com/semanticintent/cal-runtime"
+url: "https://cal.cormorantforaging.dev"
+abstract: >-
+  CAL (Cormorant Agentic Language) Runtime is a deterministic execution engine
+  for cascade analysis using the Cormorant Foraging methodology. It provides a
+  complete TypeScript implementation including a Peggy-based parser, 6D cascade
+  analyzer, DRIFT gap measurement, Fetch action decisions, and pluggable adapters
+  for data sources and alert channels. CAL encodes the Cormorant Foraging Framework
+  directly into language syntax — keywords like FORAGE, DRIFT, FETCH, CHIRP, PERCH,
+  and WAKE map to framework layers, making methodology executable rather than
+  descriptive. 192 passing tests validate the complete pipeline.
+keywords:
+  - domain-specific-language
+  - cormorant-agentic-language
+  - cascade-analysis
+  - cormorant-foraging
+  - deterministic-execution
+  - drift-measurement
+  - fetch-decisions
+  - 6d-methodology
+  - intelligence-systems
+  - biomimetic-framework
+license: MIT
+version: 1.0.0
+date-released: "2026-03-07"
+references:
+  - type: software
+    title: "Cormorant Foraging Framework: A Multi-Layered Architecture for Intelligence Systems"
+    authors:
+      - family-names: Shatny
+        given-names: Michael
+    doi: "10.5281/zenodo.18904952"
+    url: "https://github.com/semanticintent/cormorant-foraging-framework"
+  - type: software
+    title: "6D Foraging Methodology: Strategic Dimensional Discovery"
+    authors:
+      - family-names: Shatny
+        given-names: Michael
+    doi: "10.5281/zenodo.18209946"
+    url: "https://github.com/semanticintent/6d-foraging-methodology"
+  - type: software
+    title: "Semantic Intent SSOT"
+    authors:
+      - family-names: Shatny
+        given-names: Michael
+    doi: "10.5281/zenodo.17114972"
+    url: "https://semanticintent.dev/papers/semantic-intent-ssot"
