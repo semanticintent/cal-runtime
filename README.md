@@ -1,110 +1,172 @@
 # CAL Runtime
 
-**Cormorant Agentic Language (CAL) — Runtime Execution Engine**
+**Cascade Analysis Language — Deterministic Execution Engine**
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18905193.svg)](https://doi.org/10.5281/zenodo.18905193)
+[![npm](https://img.shields.io/npm/v/@stratiqx/cal-runtime)](https://www.npmjs.com/package/@stratiqx/cal-runtime)
+[![Tests](https://img.shields.io/badge/tests-192%20passing-brightgreen)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A deterministic execution engine for cascade analysis using the Cormorant Foraging methodology and 6D dimensional framework.
-
-## What is CAL?
-
-CAL is a domain-specific language for finding hidden costs through cascade analysis. It turns methodology into executable code — keywords ARE the framework.
+CAL is a domain-specific language for cascade analysis. It turns methodology into executable code — the keywords *are* the framework.
 
 ```cal
--- Find high-urgency situations
-FORAGE entities
-WHERE sound > 7
-ACROSS D1, D2, D3
+-- Silicon Valley Bank: 6D Cascade Analysis
+-- Sense → Analyze → Measure → Decide → Act
+
+FORAGE banks
+WHERE asset_liability_mismatch > 50
+  AND uninsured_deposits > 85
+  AND cro_vacancy IS "18 months"
+ACROSS D5, D1, D3, D4, D6, D2
 DEPTH 3
-SURFACE cascade_map
+SURFACE svb_cascade
 
--- Measure the gap
-DRIFT cascade_map
-METHODOLOGY 85
-PERFORMANCE 35
+DIVE INTO deposits
+WHEN withdrawal_rate > 1000000    -- $1M per second
+TRACE cascade
+EMIT bank_run_signal
 
--- Decide when to act
-FETCH cascade_map
+DRIFT svb_cascade
+METHODOLOGY 90                    -- expected risk detection capability
+PERFORMANCE 15                    -- actual: audits passed, cascade invisible
+
+FETCH svb_cascade
 THRESHOLD 1000
-ON EXECUTE CHIRP critical "Take action"
+ON EXECUTE CHIRP critical "6/6 dimensions compromised in 48 hours"
+
+SURFACE analysis AS json
 ```
 
-## Features
+> This script is from [UC-039: The 48-Hour Cascade](https://uc-039.stratiqx.com) — the highest FETCH score (3,566) in a library of [39 published case studies](https://uc-000.stratiqx.com).
 
-- Methodology-native keywords (FORAGE, DRIFT, FETCH, CHIRP, PERCH, WAKE)
-- 6D dimension analysis (Customer, Employee, Revenue, Regulatory, Quality, Operational)
-- 3D Lens scoring (Sound x Space x Time)
-- DRIFT gap measurement (Methodology - Performance)
-- Fetch action decisions with multiplicative gating
-- Cascade pathway mapping with depth control
-- Financial impact calculation with cascade multipliers
-- Pluggable data adapters (JSON, memory, composite)
-- Pluggable alert adapters (console, file, webhook)
-- CLI tool for script execution
-- 192 passing tests across 8 test suites
+## The 5-Layer Pipeline
+
+CAL scripts follow a deterministic pipeline that maps directly to the [6D Foraging Methodology](https://6d.cormorantforaging.dev):
+
+| Layer | Keywords | What It Does |
+|-------|----------|-------------|
+| **SENSE** | `FORAGE`, `WHERE`, `ACROSS`, `PERCH`, `LISTEN`, `WAKE` | Find entities with high-urgency signals across dimensions |
+| **ANALYZE** | `DIVE INTO`, `WHEN`, `TRACE`, `EMIT` | Deep-dive into cascade propagation pathways |
+| **MEASURE** | `DRIFT`, `METHODOLOGY`, `PERFORMANCE` | Quantify the gap between expected and actual capability |
+| **DECIDE** | `FETCH`, `THRESHOLD`, `ON EXECUTE/CONFIRM/QUEUE/WAIT` | Route action based on `FETCH = Chirp × |DRIFT| × Confidence` |
+| **ACT** | `CHIRP`, `SURFACE` | Alert and output results |
+
+## 6D Dimensions
+
+Every analysis scores across six organizational dimensions:
+
+| ID | Dimension | Domain |
+|----|-----------|--------|
+| D1 | Customer | Market impact, user sentiment, adoption |
+| D2 | Employee | Talent, workforce, human capital |
+| D3 | Revenue | Financial health, pricing, market cap |
+| D4 | Regulatory | Compliance, legal, policy |
+| D5 | Quality | Risk management, product performance |
+| D6 | Operational | Process, infrastructure, systems |
+
+Cascade chains map how failure (or success) propagates across dimensions: `D5 → D1 → D3 → D4 → D6 → D2`
 
 ## Quick Start
+
+```bash
+npm install @stratiqx/cal-runtime
+```
 
 ```javascript
 import { parse, execute } from '@stratiqx/cal-runtime';
 
-// Parse CAL script
 const result = parse(`
   FORAGE entities
   WHERE sound > 7
-  SURFACE results
+  ACROSS D1, D2, D3
+  DEPTH 3
+  SURFACE cascade_map
+
+  DRIFT cascade_map
+  METHODOLOGY 85
+  PERFORMANCE 35
+
+  FETCH cascade_map
+  THRESHOLD 1000
+  ON EXECUTE CHIRP critical "Cascade detected"
 `);
 
-// Execute with data
 const output = await execute(result.actionPlan, {
   entities: [
-    { id: 1, sound: 8, space: 7, time: 9 }
+    { id: 'svb', sound: 9, space: 9, time: 10, dimensions: { D1: 88, D3: 82, D5: 78 } }
   ]
 });
+```
 
-console.log(output.results);
+### CLI
+
+```bash
+# Run a CAL script
+npx cal examples/closed-loop-pipeline.cal
+
+# With data
+npx cal script.cal --data entities.json
 ```
 
 ## Architecture
 
 ```
-CAL Script → Parser (Peggy) → ActionPlan → Executor → Results
-                                              ↓
-                                    Data Adapters + Alert Adapters
+CAL Script → PEG Parser → Action Plan → Executor → Results
+                                            ↓
+                              Data Adapters + Alert Adapters
 ```
+
+- **Parser**: PEG grammar (Peggy) — 10 keywords, deterministic parse
+- **Executor**: Layer-by-layer pipeline execution
+- **Data Adapters**: JSON, memory, composite (pluggable)
+- **Alert Adapters**: Console, file, webhook (pluggable)
+- **Test Suite**: 192 tests across 8 suites
+
+## Examples
+
+The [`examples/`](./examples/) directory contains runnable CAL scripts:
+
+- [`closed-loop-pipeline.cal`](./examples/closed-loop-pipeline.cal) — Full 5-layer pipeline
+- [`drift-analysis.cal`](./examples/drift-analysis.cal) — DRIFT gap measurement
+- [`simple-query.cal`](./examples/simple-query.cal) — Basic FORAGE query
 
 ## Documentation
 
-- [Language Specification](https://cal.cormorantforaging.dev)
-- [API Documentation](./docs/API.md)
-- [Architecture](./docs/ARCHITECTURE.md)
+- **Language Spec**: [cal.cormorantforaging.dev](https://cal.cormorantforaging.dev)
+- **API Reference**: [docs/API.md](./docs/API.md)
+- **Architecture**: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+
+## Ecosystem
+
+| Component | What It Is |
+|-----------|-----------|
+| [CAL Runtime](https://github.com/semanticintent/cal-runtime) | This repo — the execution engine |
+| [CAL Specification](https://cal.cormorantforaging.dev) | Language reference (40+ pages) |
+| [6D Methodology](https://6d.cormorantforaging.dev) | Dimensional analysis framework |
+| [Case Library](https://uc-000.stratiqx.com) | 39 published analyses with FETCH scores |
+| [StratIQX Intelligence](https://intelligence.stratiqx.com) | Consulting and analysis services |
+| [Cormorant Foraging](https://cormorantforaging.dev) | Foundational behavioral methodology |
+
+### Zenodo DOIs
+
+| DOI | Artifact |
+|-----|----------|
+| [10.5281/zenodo.18905193](https://doi.org/10.5281/zenodo.18905193) | CAL Runtime |
+| [10.5281/zenodo.18209946](https://doi.org/10.5281/zenodo.18209946) | 6D Methodology |
+| [10.5281/zenodo.18904952](https://doi.org/10.5281/zenodo.18904952) | Cormorant Foraging Framework |
+| [10.5281/zenodo.17114972](https://doi.org/10.5281/zenodo.17114972) | Semantic Intent SSOT |
+| [10.5281/zenodo.18905197](https://doi.org/10.5281/zenodo.18905197) | CAL Documentation |
 
 ## Development
 
 ```bash
-# Install dependencies
-npm install
-
-# Run tests
-npm test
-
-# Build
-npm run build
+npm install          # Install dependencies
+npm test             # Run 192 tests
+npm run build        # Build for production
+npm run typecheck    # Type checking
 ```
 
-## Ecosystem
-
-CAL Runtime is the execution engine for the Cormorant Foraging Framework:
-
-- [Cormorant Foraging Framework](https://cormorantforaging.dev) — Foundational methodology
-- [CAL Language Specification](https://cal.cormorantforaging.dev) — Language reference
-- [6D Foraging Methodology](https://6d.cormorantforaging.dev) — Dimensional analysis
-- [StratIQX](https://stratiqx.com) — Case studies and analysis platform
-
 ## Citation
-
-If you use CAL Runtime in your work, please cite:
 
 ```bibtex
 @misc{shatny2026cal,
@@ -120,8 +182,7 @@ If you use CAL Runtime in your work, please cite:
 
 ## Author
 
-**Michael Shatny**
-ORCID: [0009-0006-2011-3258](https://orcid.org/0009-0006-2011-3258)
+**Michael Shatny** — [ORCID: 0009-0006-2011-3258](https://orcid.org/0009-0006-2011-3258)
 
 ## License
 

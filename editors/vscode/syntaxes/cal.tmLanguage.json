@@ -1,0 +1,157 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "CAL",
+  "scopeName": "source.cal",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#dimensions" },
+    { "include": "#keywords-layer1" },
+    { "include": "#keywords-layer2" },
+    { "include": "#keywords-layer3" },
+    { "include": "#keywords-layer4" },
+    { "include": "#keywords-layer5" },
+    { "include": "#keywords-clauses" },
+    { "include": "#keywords-operators" },
+    { "include": "#alert-types" },
+    { "include": "#durations" },
+    { "include": "#numbers" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-dash.cal",
+          "match": "--.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.cal",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.cal",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "dimensions": {
+      "patterns": [
+        {
+          "name": "constant.other.dimension.cal",
+          "match": "\\b(D[1-6])\\b"
+        },
+        {
+          "name": "constant.other.dimension-all.cal",
+          "match": "\\bALL\\b"
+        }
+      ]
+    },
+    "keywords-layer1": {
+      "comment": "SENSE layer — signal detection",
+      "patterns": [
+        {
+          "name": "keyword.control.sense.cal",
+          "match": "\\b(FORAGE|PERCH|LISTEN|WAKE)\\b"
+        }
+      ]
+    },
+    "keywords-layer2": {
+      "comment": "ANALYZE layer — cascade investigation",
+      "patterns": [
+        {
+          "name": "keyword.control.analyze.cal",
+          "match": "\\b(DIVE\\s+INTO|TRACE|EMIT)\\b"
+        }
+      ]
+    },
+    "keywords-layer3": {
+      "comment": "MEASURE layer — gap quantification",
+      "patterns": [
+        {
+          "name": "keyword.control.measure.cal",
+          "match": "\\b(DRIFT|METHODOLOGY|PERFORMANCE)\\b"
+        }
+      ]
+    },
+    "keywords-layer4": {
+      "comment": "DECIDE layer — action routing",
+      "patterns": [
+        {
+          "name": "keyword.control.decide.cal",
+          "match": "\\b(FETCH|THRESHOLD)\\b"
+        }
+      ]
+    },
+    "keywords-layer5": {
+      "comment": "ACT layer — output and alerts",
+      "patterns": [
+        {
+          "name": "keyword.control.act.cal",
+          "match": "\\b(CHIRP|SURFACE)\\b"
+        }
+      ]
+    },
+    "keywords-clauses": {
+      "comment": "Clause keywords used within layers",
+      "patterns": [
+        {
+          "name": "keyword.other.clause.cal",
+          "match": "\\b(WHERE|AND|OR|ACROSS|DEPTH|WHEN|ON|FOR|AFTER|THEN|INTO|AS)\\b"
+        }
+      ]
+    },
+    "keywords-operators": {
+      "comment": "Comparison operators",
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.cal",
+          "match": "\\b(IS\\s+NOT|IS)\\b"
+        },
+        {
+          "name": "keyword.operator.decision.cal",
+          "match": "\\b(EXECUTE|CONFIRM|QUEUE|WAIT)\\b"
+        }
+      ]
+    },
+    "alert-types": {
+      "patterns": [
+        {
+          "name": "support.type.alert.cal",
+          "match": "\\b(critical|warning|info|success)\\b"
+        }
+      ]
+    },
+    "durations": {
+      "patterns": [
+        {
+          "name": "constant.numeric.duration.cal",
+          "match": "\\b\\d+(d|h|m|w|mo)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.cal",
+          "match": "\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.cal",
+          "match": "\\b[a-z_][a-z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}

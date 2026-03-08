@@ -1,0 +1,48 @@
+-- ================================================
+-- Silicon Valley Bank: The 48-Hour Cascade
+-- UC-039 | FETCH: 3,566 (EXECUTE — CRITICAL)
+--
+-- $209B in assets. 48 hours to insolvency.
+-- $42B withdrawn in a single day — $1M every second.
+-- The fastest bank run in U.S. history hit all six
+-- dimensions before any risk model saw it coming.
+--
+-- Sense → Analyze → Measure → Decide → Act
+-- ================================================
+
+-- LAYER 1: SENSE
+-- Identify entities with compounding risk signals
+FORAGE banks
+WHERE asset_liability_mismatch > 50
+  AND uninsured_deposits > 85
+  AND cro_vacancy IS "18 months"
+ACROSS D5, D1, D3, D4, D6, D2
+DEPTH 3
+SURFACE svb_cascade
+
+-- LAYER 2: ANALYZE
+-- Trace the propagation from risk to bank run
+DIVE INTO deposits
+WHEN withdrawal_rate > 1000000
+TRACE cascade
+EMIT bank_run_signal
+
+-- LAYER 3: MEASURE (DRIFT)
+-- Quantify the gap between expected and actual
+DRIFT svb_cascade
+METHODOLOGY 85
+PERFORMANCE 35
+
+-- LAYER 4: DECIDE (FETCH)
+-- Fetch = Chirp × |DRIFT| × Confidence
+-- 63.4 × 50 × 0.75 = 2,378
+FETCH svb_cascade
+THRESHOLD 1000
+ON EXECUTE CHIRP critical "6/6 dimensions compromised in 48 hours"
+ON CONFIRM CHIRP warning "Review dimensional exposure immediately"
+ON QUEUE SURFACE monitoring_report
+ON WAIT PERCH ON segment:"banking"
+
+-- LAYER 5: ACT
+-- Output the full cascade analysis
+SURFACE analysis AS json

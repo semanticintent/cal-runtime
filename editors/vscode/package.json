@@ -1,0 +1,33 @@
+{
+  "name": "cal-language",
+  "displayName": "CAL — Cascade Analysis Language",
+  "description": "Syntax highlighting for CAL (Cascade Analysis Language) — the DSL behind the 6D Foraging Methodology",
+  "version": "0.1.0",
+  "publisher": "stratiqx",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/semanticintent/cal-runtime"
+  },
+  "categories": ["Programming Languages"],
+  "keywords": ["cal", "cascade", "analysis", "dsl", "6d", "forage", "drift", "fetch"],
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "cal",
+        "aliases": ["CAL", "Cascade Analysis Language"],
+        "extensions": [".cal"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "cal",
+        "scopeName": "source.cal",
+        "path": "./syntaxes/cal.tmLanguage.json"
+      }
+    ]
+  }
+}
