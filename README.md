@@ -3,11 +3,12 @@
 **Cascade Analysis Language — Deterministic Execution Engine**
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18905193.svg)](https://doi.org/10.5281/zenodo.18905193)
-[![npm](https://img.shields.io/npm/v/@stratiqx/cal-runtime)](https://www.npmjs.com/package/@stratiqx/cal-runtime)
 [![Tests](https://img.shields.io/badge/tests-192%20passing-brightgreen)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-CAL is a domain-specific language for cascade analysis. It turns methodology into executable code — the keywords *are* the framework.
+A domain-specific language for modeling how failure — and success — propagates across organizations. CAL maps the invisible pathways between dimensions that traditional risk tools evaluate in isolation. The keywords *are* the methodology: `FORAGE` to sense signals, `DRIFT` to measure gaps, `FETCH` to decide when to act.
+
+Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [39 published case studies](https://uc-000.stratiqx.com) spanning banking, tech, sports, fashion, and entertainment — with FETCH scores ranging from 1,312 to 3,566.
 
 ```cal
 -- Silicon Valley Bank: 6D Cascade Analysis
