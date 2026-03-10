@@ -13,6 +13,8 @@ import { Executor } from '../executor/index.js';
 import { createDataAdapter } from '../adapters/data/index.js';
 import { createAlertAdapter } from '../adapters/alerts/index.js';
 import type { ActionPlan } from '../types/index.js';
+import { initCommand } from './init.js';
+import { scaffoldCommand } from './scaffold.js';
 
 const VERSION = '0.1.0';
 
@@ -27,9 +29,11 @@ const BANNER = `
  * CLI options parsed from command-line arguments
  */
 interface CLIOptions {
-  command: 'run' | 'analyze' | 'validate' | 'help' | 'version';
+  command: 'run' | 'analyze' | 'validate' | 'init' | 'scaffold' | 'help' | 'version';
   script?: string;
   inline?: string;
+  name?: string;
+  subcommand?: string;
   dataFile?: string;
   dataPath?: string;
   outputFile?: string;
@@ -60,6 +64,22 @@ export function parseArgs(args: string[]): CLIOptions {
       case 'help':
       case 'version':
         options.command = arg;
+        break;
+
+      case 'init':
+        options.command = 'init';
+        // Next positional arg is the project name
+        if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+          options.name = args[++i];
+        }
+        break;
+
+      case 'scaffold':
+        options.command = 'scaffold';
+        // Next positional arg is the subcommand (e.g., "entity")
+        if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+          options.subcommand = args[++i];
+        }
         break;
 
       case '--inline':
@@ -124,6 +144,8 @@ USAGE:
   cal run <script.cal> [options]           Execute a CAL script
   cal analyze <script.cal> [options]       Analyze without execution
   cal validate <script.cal>                Validate script syntax
+  cal init [name]                          Scaffold a new CAL project
+  cal scaffold entity                      Interactive entity JSON generator
   cal help                                 Show this help
   cal version                              Show version
 
@@ -507,6 +529,14 @@ export async function main(argv: string[] = process.argv): Promise<void> {
 
     case 'validate':
       await validateCommand(options);
+      break;
+
+    case 'init':
+      await initCommand({ name: options.name, quiet: options.quiet });
+      break;
+
+    case 'scaffold':
+      await scaffoldCommand({ subcommand: options.subcommand, quiet: options.quiet });
       break;
 
     default:
