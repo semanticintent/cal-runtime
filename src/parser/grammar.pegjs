@@ -314,7 +314,7 @@ AsClause
 ConditionList
   = first:Condition rest:(LogicalOp Condition)* {
       if (rest.length === 0) return [first];
-      return [first, ...rest.map(r => ({ operator: r[0], condition: r[1] }))];
+      return [first, ...rest.map(r => r[1])];
     }
 
 Condition

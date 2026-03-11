@@ -8,6 +8,7 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { compile } from '../parser/index.js';
 import { Executor } from '../executor/index.js';
 import { createDataAdapter } from '../adapters/data/index.js';
@@ -16,7 +17,9 @@ import type { ActionPlan } from '../types/index.js';
 import { initCommand } from './init.js';
 import { scaffoldCommand } from './scaffold.js';
 
-const VERSION = '0.1.0';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(await fs.readFile(path.resolve(__dirname, '../../package.json'), 'utf-8'));
+const VERSION = pkg.version;
 
 const BANNER = `
 🪶 ═══════════════════════════════════════════════════════════════════

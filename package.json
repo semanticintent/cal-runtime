@@ -1,6 +1,6 @@
 {
   "name": "@stratiqx/cal-runtime",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Cormorant Agentic Language (CAL) - Runtime execution engine for cascade analysis",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
