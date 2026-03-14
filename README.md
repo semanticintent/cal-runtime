@@ -9,7 +9,7 @@
 
 A domain-specific language for modeling how failure — and success — propagates across organizations. CAL maps the invisible pathways between dimensions that traditional risk tools evaluate in isolation. The keywords *are* the methodology: `FORAGE` to sense signals, `DRIFT` to measure gaps, `FETCH` to decide when to act.
 
-Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [39 published case studies](https://uc-000.stratiqx.com) spanning banking, tech, sports, fashion, and entertainment — with FETCH scores ranging from 1,312 to 3,566.
+Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [49 published case studies](https://uc-000.stratiqx.com) spanning banking, tech, sports, fashion, healthcare, energy, and entertainment — with FETCH scores ranging from 1,040 to 4,461.
 
 ```cal
 -- Silicon Valley Bank: 6D Cascade Analysis
@@ -39,7 +39,7 @@ ON EXECUTE CHIRP critical "6/6 dimensions compromised in 48 hours"
 SURFACE analysis AS json
 ```
 
-> This script is from [UC-039: The 48-Hour Cascade](https://uc-039.stratiqx.com) — the highest FETCH score (3,566) in a library of [39 published case studies](https://uc-000.stratiqx.com).
+> This script is from [UC-039: The 48-Hour Cascade](https://uc-039.stratiqx.com) — the highest FETCH score (4,461) in a library of [49 published case studies](https://uc-000.stratiqx.com). Watch the [70-second video breakdown](https://youtu.be/Tid3EFP5uVY).
 
 ## The 5-Layer Pipeline
 
@@ -145,7 +145,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 | [CAL Runtime](https://github.com/semanticintent/cal-runtime) | This repo — the execution engine |
 | [CAL Specification](https://cal.cormorantforaging.dev) | Language reference (40+ pages) |
 | [6D Methodology](https://6d.cormorantforaging.dev) | Dimensional analysis framework |
-| [Case Library](https://uc-000.stratiqx.com) | 39 published analyses with FETCH scores |
+| [Case Library](https://uc-000.stratiqx.com) | 49 published analyses with FETCH scores |
 | [StratIQX Intelligence](https://intelligence.stratiqx.com) | Consulting and analysis services |
 | [Cormorant Foraging](https://cormorantforaging.dev) | Foundational behavioral methodology |
 
