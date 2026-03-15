@@ -50,6 +50,7 @@ export type CALKeyword =
   | 'wake'
   | 'chirp'
   | 'trace'
+  | 'watch'
   | 'surface';
 
 /**
@@ -149,6 +150,7 @@ export type Statement =
   | WakeStatement
   | ChirpStatement
   | TraceStatement
+  | WatchStatement
   | SurfaceStatement;
 
 /**
@@ -297,14 +299,32 @@ export interface TraceStatement {
 }
 
 /**
+ * WATCH Statement - Continuous Condition Monitoring
+ *
+ * SEMANTIC INTENT: Cormorant watches (sustained observation over time).
+ * Extends FORAGE with temporal persistence: "keep sensing this condition."
+ *
+ * OBSERVABLE PROPERTIES:
+ * - target: Named trigger to monitor
+ * - when: Condition that fires the trigger
+ */
+export interface WatchStatement {
+  type: 'Watch';
+  target: string;
+  when: Condition;
+}
+
+/**
  * SURFACE Statement - Return Results
  *
  * SEMANTIC INTENT: Bring results to surface (output).
+ * Optional scheduledDate: resurface for reassessment on this date.
  */
 export interface SurfaceStatement {
   type: 'Surface';
   output: string;
   format?: string;
+  scheduledDate?: string | null;
 }
 
 // ============================================
@@ -408,6 +428,7 @@ export type Action =
   | ScheduleAction
   | AlertAction
   | TraceCascadeAction
+  | WatchAction
   | OutputAction;
 
 /**
@@ -517,12 +538,23 @@ export interface TraceCascadeAction {
 }
 
 /**
+ * Watch Action - WATCH Execution
+ * Semantic: Cormorant watches (continuous condition monitoring)
+ */
+export interface WatchAction {
+  action: 'watch';  // Semantic: WATCH
+  target: string;
+  condition: Condition;
+}
+
+/**
  * Output Action - SURFACE Execution
  */
 export interface OutputAction {
   action: 'output';  // Semantic: SURFACE
   data: string;
   format: string;
+  scheduledDate?: string | null;
 }
 
 // ============================================
@@ -938,7 +970,7 @@ export type CompileResult =
 export function isValidCALKeyword(keyword: string): keyword is CALKeyword {
   const validKeywords: CALKeyword[] = [
     'forage', 'dive', 'drift', 'fetch', 'perch',
-    'listen', 'wake', 'chirp', 'trace', 'surface'
+    'listen', 'wake', 'chirp', 'trace', 'watch', 'surface'
   ];
   return validKeywords.includes(keyword as CALKeyword);
 }

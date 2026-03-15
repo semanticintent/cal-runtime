@@ -37,6 +37,7 @@ Statement
   / WakeStatement
   / ChirpStatement
   / TraceStatement
+  / WatchStatement
   / SurfaceStatement
 
 // ============================================
@@ -293,18 +294,41 @@ FromClause
 // SURFACE - Return/output results
 // ============================================
 
+// ============================================
+// WATCH - Continuous condition monitoring
+// ============================================
+
+WatchStatement
+  = WATCH _ target:Identifier _ WHEN _ condition:Condition _ {
+      return {
+        type: "Watch",
+        target: target,
+        when: condition
+      };
+    }
+
+// ============================================
+// SURFACE - Return results (with optional scheduled resurface)
+// ============================================
+
 SurfaceStatement
-  = SURFACE _ what:Identifier _ as:AsClause? _ {
+  = SURFACE _ what:Identifier _ as:AsClause? _ on:OnDateClause? _ {
       return {
         type: "Surface",
         output: what,
-        format: as || "json"
+        format: as || "json",
+        scheduledDate: on || null
       };
     }
 
 AsClause
   = AS _ format:Identifier _ {
       return format;
+    }
+
+OnDateClause
+  = ON _ date:StringLiteral _ {
+      return date;
     }
 
 // ============================================
@@ -476,6 +500,7 @@ EXECUTE = "EXECUTE"i
 CONFIRM = "CONFIRM"i
 QUEUE = "QUEUE"i
 WAIT = "WAIT"i
+WATCH = "WATCH"i
 
 // ============================================
 // WHITESPACE & COMMENTS

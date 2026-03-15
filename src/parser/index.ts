@@ -166,6 +166,9 @@ function transformStatement(stmt: Statement, plan: ActionPlan): void {
     case 'Trace':
       transformTrace(stmt, plan);
       break;
+    case 'Watch':
+      transformWatch(stmt, plan);
+      break;
     case 'Surface':
       transformSurface(stmt, plan);
       break;
@@ -296,11 +299,20 @@ function transformTrace(stmt: TraceStatement, plan: ActionPlan): void {
   });
 }
 
+function transformWatch(stmt: any, plan: ActionPlan): void {
+  plan.actions.push({
+    action: 'watch',
+    target: stmt.target,
+    condition: stmt.when
+  });
+}
+
 function transformSurface(stmt: SurfaceStatement, plan: ActionPlan): void {
   plan.actions.push({
     action: 'output',
     data: stmt.output ?? 'results',
-    format: stmt.format ?? 'json'
+    format: stmt.format ?? 'json',
+    scheduledDate: stmt.scheduledDate ?? null
   });
 }
 
@@ -358,7 +370,7 @@ export function validateSemanticContracts(plan: ActionPlan): boolean {
   // Rule 1: All actions must have semantic action types
   const validActions = [
     'query', 'analyze', 'drift', 'fetch', 'observe',
-    'monitor', 'schedule', 'alert', 'traceCascade', 'output'
+    'monitor', 'schedule', 'alert', 'traceCascade', 'watch', 'output'
   ];
 
   for (const action of plan.actions) {

@@ -222,6 +222,7 @@ export class Executor {
       schedule: this.handleSchedule.bind(this),
       alert: this.handleAlert.bind(this),
       traceCascade: this.handleTraceCascade.bind(this),
+      watch: this.handleWatch.bind(this),
       output: this.handleOutput.bind(this)
     };
 
@@ -549,19 +550,51 @@ export class Executor {
    * Handle SURFACE → output
    * Semantic: Results emerge to surface
    */
+  /**
+   * Handle WATCH → watch
+   * Semantic: Cormorant watches for condition (sustained temporal observation)
+   */
+  private async handleWatch(action: any): Promise<any> {
+    const { target, condition } = action;
+
+    const watcher = {
+      id: `watch_${target}_${Date.now()}`,
+      target,
+      condition,
+      created: new Date().toISOString(),
+      status: 'active'
+    };
+
+    // Store watcher in results for downstream access
+    if (!this.results['_watchers']) {
+      this.results['_watchers'] = [];
+    }
+    this.results['_watchers'].push(watcher);
+
+    return {
+      success: true,
+      watcherId: watcher.id,
+      target,
+      status: 'active',
+      message: `Watching ${target}`
+    };
+  }
+
   private async handleOutput(action: any): Promise<any> {
-    const { data, format } = action;
+    const { data, format, scheduledDate } = action;
 
     const output = {
       format: format || 'json',
       data: this.results[data] || this.results,
-      generated: new Date().toISOString()
+      generated: new Date().toISOString(),
+      scheduledDate: scheduledDate || null
     };
 
     return {
       success: true,
       format: output.format,
-      dataKey: data
+      dataKey: data,
+      scheduledDate: output.scheduledDate
     };
   }
 
