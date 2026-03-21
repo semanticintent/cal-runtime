@@ -98,8 +98,8 @@ DiveClauses
   / EmitClause
 
 WhenClause
-  = WHEN _ condition:Condition _ {
-      return { when: condition };
+  = WHEN _ conditions:ConditionList _ {
+      return { when: conditions };
     }
 
 TraceClause
@@ -299,11 +299,11 @@ FromClause
 // ============================================
 
 WatchStatement
-  = WATCH _ target:Identifier _ WHEN _ condition:Condition _ {
+  = WATCH _ target:Identifier _ WHEN _ conditions:ConditionList _ {
       return {
         type: "Watch",
         target: target,
-        when: condition
+        when: conditions
       };
     }
 

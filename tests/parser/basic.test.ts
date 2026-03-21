@@ -123,6 +123,91 @@ describe('Parser - Basic Functionality', () => {
     }
   });
 
+  it('should parse WATCH with single WHEN condition', () => {
+    const source = `
+      WATCH labour_crack WHEN unemployment >= 7.0
+    `;
+
+    const result = parse(source);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const stmt = result.ast.statements[0];
+      expect(stmt.type).toBe('Watch');
+      if (stmt.type === 'Watch') {
+        expect(stmt.when).toHaveLength(1);
+        expect(stmt.when[0].left).toBe('unemployment');
+        expect(stmt.when[0].operator).toBe('>=');
+        expect(stmt.when[0].right).toBe(7.0);
+      }
+    }
+  });
+
+  it('should parse WATCH with WHEN AND chaining', () => {
+    const source = `
+      WATCH labour_crack WHEN unemployment >= 7.0 AND vacancy_healthcare_trades > 5.0
+    `;
+
+    const result = parse(source);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const stmt = result.ast.statements[0];
+      expect(stmt.type).toBe('Watch');
+      if (stmt.type === 'Watch') {
+        expect(stmt.when).toHaveLength(2);
+        expect(stmt.when[0].left).toBe('unemployment');
+        expect(stmt.when[0].operator).toBe('>=');
+        expect(stmt.when[0].right).toBe(7.0);
+        expect(stmt.when[1].left).toBe('vacancy_healthcare_trades');
+        expect(stmt.when[1].operator).toBe('>');
+        expect(stmt.when[1].right).toBe(5.0);
+      }
+    }
+  });
+
+  it('should parse DIVE with WHEN AND chaining', () => {
+    const source = `
+      DIVE INTO market_analysis WHEN volatility > 20 AND volume >= 1000
+    `;
+
+    const result = parse(source);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const stmt = result.ast.statements[0];
+      expect(stmt.type).toBe('Dive');
+      if (stmt.type === 'Dive') {
+        expect(stmt.when).toHaveLength(2);
+        expect(stmt.when[0].left).toBe('volatility');
+        expect(stmt.when[0].operator).toBe('>');
+        expect(stmt.when[0].right).toBe(20);
+        expect(stmt.when[1].left).toBe('volume');
+        expect(stmt.when[1].operator).toBe('>=');
+        expect(stmt.when[1].right).toBe(1000);
+      }
+    }
+  });
+
+  it('should transform WATCH with AND conditions into action plan', () => {
+    const source = `
+      WATCH price_alert WHEN price > 100 AND volume >= 500
+    `;
+
+    const result = compile(source);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const watchAction = result.actionPlan.actions[0];
+      expect(watchAction.action).toBe('watch');
+      if (watchAction.action === 'watch') {
+        expect(watchAction.condition).toHaveLength(2);
+        expect(watchAction.condition[0].left).toBe('price');
+        expect(watchAction.condition[1].left).toBe('volume');
+      }
+    }
+  });
+
   it('should preserve semantic contracts in action plan', () => {
     const source = `
       DRIFT gap_analysis

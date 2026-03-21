@@ -188,7 +188,7 @@ export interface ForageStatement {
 export interface DiveStatement {
   type: 'Dive';
   target: string;
-  when?: Condition;
+  when?: Condition[];
   trace?: string;
   emit?: string;
 }
@@ -311,7 +311,7 @@ export interface TraceStatement {
 export interface WatchStatement {
   type: 'Watch';
   target: string;
-  when: Condition;
+  when: Condition[];
 }
 
 /**
@@ -544,7 +544,7 @@ export interface TraceCascadeAction {
 export interface WatchAction {
   action: 'watch';  // Semantic: WATCH
   target: string;
-  condition: Condition;
+  condition: Condition[];
 }
 
 /**

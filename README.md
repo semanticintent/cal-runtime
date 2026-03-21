@@ -4,12 +4,12 @@
 
 [![npm](https://img.shields.io/npm/v/@stratiqx/cal-runtime)](https://www.npmjs.com/package/@stratiqx/cal-runtime)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18905193.svg)](https://doi.org/10.5281/zenodo.18905193)
-[![Tests](https://img.shields.io/badge/tests-192%20passing-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-196%20passing-brightgreen)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A domain-specific language for modeling how failure — and success — propagates across organizations. CAL maps the invisible pathways between dimensions that traditional risk tools evaluate in isolation. The keywords *are* the methodology: `FORAGE` to sense signals, `DRIFT` to measure gaps, `FETCH` to decide when to act.
 
-Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [49 published case studies](https://uc-000.stratiqx.com) spanning banking, tech, sports, fashion, healthcare, energy, and entertainment — with FETCH scores ranging from 1,040 to 4,461.
+Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [96 published case studies](https://uc-000.stratiqx.com) spanning 40 sectors — including banking, tech, sports, insurance, weather-ai, cybersecurity, automotive, and geopolitics — with FETCH scores ranging from 1,040 to 4,461.
 
 ```cal
 -- Silicon Valley Bank: 6D Cascade Analysis
@@ -25,6 +25,7 @@ SURFACE svb_cascade
 
 DIVE INTO deposits
 WHEN withdrawal_rate > 1000000    -- $1M per second
+  AND uninsured_ratio > 0.85      -- AND chaining supported
 TRACE cascade
 EMIT bank_run_signal
 
@@ -39,7 +40,7 @@ ON EXECUTE CHIRP critical "6/6 dimensions compromised in 48 hours"
 SURFACE analysis AS json
 ```
 
-> This script is from [UC-039: The 48-Hour Cascade](https://uc-039.stratiqx.com) — the highest FETCH score (4,461) in a library of [49 published case studies](https://uc-000.stratiqx.com). Watch the [70-second video breakdown](https://youtu.be/Tid3EFP5uVY).
+> This script is from [UC-039: The 48-Hour Cascade](https://uc-039.stratiqx.com) — the highest FETCH score (4,461) in a library of [96 published case studies](https://uc-000.stratiqx.com). Watch the [70-second video breakdown](https://youtu.be/Tid3EFP5uVY).
 
 ## The 5-Layer Pipeline
 
@@ -118,11 +119,11 @@ CAL Script → PEG Parser → Action Plan → Executor → Results
                               Data Adapters + Alert Adapters
 ```
 
-- **Parser**: PEG grammar (Peggy) — 10 keywords, deterministic parse
+- **Parser**: PEG grammar (Peggy) — 11 keywords, deterministic parse
 - **Executor**: Layer-by-layer pipeline execution
 - **Data Adapters**: JSON, memory, composite (pluggable)
 - **Alert Adapters**: Console, file, webhook (pluggable)
-- **Test Suite**: 192 tests across 8 suites
+- **Test Suite**: 196 tests across 8 suites
 
 ## Examples
 
@@ -145,8 +146,8 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 | [CAL Runtime](https://github.com/semanticintent/cal-runtime) | This repo — the execution engine |
 | [CAL Specification](https://cal.cormorantforaging.dev) | Language reference (40+ pages) |
 | [6D Methodology](https://6d.cormorantforaging.dev) | Dimensional analysis framework |
-| [Case Library](https://uc-000.stratiqx.com) | 49 published analyses with FETCH scores |
-| [StratIQX Intelligence](https://intelligence.stratiqx.com) | Consulting and analysis services |
+| [Case Library](https://uc-000.stratiqx.com) | 96 published analyses across 40 sectors |
+| [StratIQX Intelligence](https://stratiqx.com) | Cascade intelligence platform |
 | [Cormorant Foraging](https://cormorantforaging.dev) | Foundational behavioral methodology |
 
 ### Zenodo DOIs
@@ -163,7 +164,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 
 ```bash
 npm install          # Install dependencies
-npm test             # Run 192 tests
+npm test             # Run 196 tests
 npm run build        # Build for production
 npm run typecheck    # Type checking
 ```
