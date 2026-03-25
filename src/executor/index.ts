@@ -19,6 +19,8 @@ import type {
   DriftResult
 } from '../types/index.js';
 
+import { SemanticContractViolation } from '../types/index.js';
+
 import {
   analyze6D,
   calculateDrift,
@@ -359,21 +361,45 @@ export class Executor {
       };
     }
 
-    // Calculate Fetch score using analyzer formula
-    // Chirp = average score from target data
-    let chirp = 0;
-    if (targetData.summary?.averageScore) {
-      chirp = targetData.summary.averageScore;
-    } else if (targetData.entities && targetData.entities.length > 0) {
-      const scores = targetData.entities.map((e: any) => e.summary?.averageScore || 0);
-      chirp = scores.reduce((a: number, b: number) => a + b, 0) / scores.length;
+    // Chirp: from entity summary chirp field (simple average of D1-D6, SKILL.md)
+    let chirp: number;
+    if (targetData.entities && targetData.entities.length > 0) {
+      const chirps = targetData.entities
+        .map((e: any) => e.summary?.chirp)
+        .filter((c: any) => typeof c === 'number' && c > 0);
+      if (chirps.length === 0) {
+        throw new SemanticContractViolation(
+          `No chirp values found in FETCH target '${target}'. ` +
+          `Entities must have D1-D6 dimension scores (0-100 scale).`
+        );
+      }
+      chirp = chirps.reduce((a: number, b: number) => a + b, 0) / chirps.length;
+    } else if (targetData.summary?.chirp > 0) {
+      chirp = targetData.summary.chirp;
+    } else {
+      throw new SemanticContractViolation(
+        `FETCH target '${target}' has no entities with chirp values. ` +
+        `Cannot compute FETCH without D1-D6 dimension scores.`
+      );
     }
 
-    // DRIFT = absolute drift value
-    const drift = driftData ? driftData.absDrift : 0;
+    // DRIFT: must exist — DRIFT must run before FETCH
+    if (!driftData) {
+      throw new SemanticContractViolation(
+        `No DRIFT result for '${target}'. DRIFT must run before FETCH.`
+      );
+    }
+    const drift = driftData.absDrift;
 
-    // Confidence = provided or default 0.8
-    const confidenceValue = confidence ?? 0.8;
+    // Confidence: from CAL script CONFIDENCE clause — no silent default
+    if (confidence === null || confidence === undefined) {
+      throw new SemanticContractViolation(
+        `FETCH requires explicit confidence. ` +
+        `Add CONFIDENCE clause to FETCH statement or pass via workflow.`
+      );
+    }
+    const confidenceValue = confidence;
+    // Note: calculateFetch normalizes confidence > 1 automatically
 
     // Use analyzer's calculateFetch function
     const result = calculateFetch(chirp, drift, confidenceValue, threshold);

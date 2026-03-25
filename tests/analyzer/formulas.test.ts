@@ -10,9 +10,11 @@ import {
   cascadeProbability,
   calculateDrift,
   calculateFetch,
+  calculateChirp,
   estimateMultiplier,
   calculateFinancialImpact,
-  scoreSignal
+  scoreSignal,
+  analyze6D
 } from '../../src/analyzer/index.js';
 
 describe('Analyzer - 3D Lens Scoring', () => {
@@ -147,21 +149,21 @@ describe('Analyzer - FETCH Calculation', () => {
     expect(result.level).toBe('EXECUTE');
   });
 
-  it('should determine CONFIRM level (score > threshold × 0.5)', () => {
-    const result = calculateFetch(40, 20, 0.8, 1000);
-    expect(result.fetchScore).toBe(640); // Between 500 and 1000
+  it('should determine CONFIRM level (750 ≤ score < 1000)', () => {
+    const result = calculateFetch(20, 50, 0.8, 1000);
+    expect(result.fetchScore).toBe(800);
     expect(result.level).toBe('CONFIRM');
   });
 
-  it('should determine QUEUE level (score > threshold × 0.1)', () => {
-    const result = calculateFetch(22, 10, 0.5, 1000);
-    expect(result.fetchScore).toBe(110); // Between 100 and 500
+  it('should determine QUEUE level (500 ≤ score < 750)', () => {
+    const result = calculateFetch(40, 20, 0.8, 1000);
+    expect(result.fetchScore).toBe(640);
     expect(result.level).toBe('QUEUE');
   });
 
-  it('should determine WAIT level (score ≤ threshold × 0.1)', () => {
+  it('should determine WAIT level (score < 500)', () => {
     const result = calculateFetch(10, 5, 0.5, 1000);
-    expect(result.fetchScore).toBe(25); // Below 100
+    expect(result.fetchScore).toBe(25);
     expect(result.level).toBe('WAIT');
   });
 
@@ -296,5 +298,169 @@ describe('Analyzer - Semantic Contract Preservation', () => {
     expect(multiplier.label).toBe('Extreme');
     expect(multiplier.min).toBe(10);
     expect(multiplier.max).toBe(15);
+  });
+});
+
+// ============================================
+// FETCH ALIGNMENT WITH SKILL.md
+// ============================================
+
+describe('Analyzer - FETCH Alignment (SKILL.md)', () => {
+
+  describe('calculateChirp', () => {
+    it('should compute chirp as simple average of D1-D6 (0-100 scale)', () => {
+      const entity = {
+        id: 'uc-125', name: 'Test', type: 'entity',
+        sound: 7, space: 7, time: 8,
+        D1: 70, D2: 62, D3: 68, D4: 42, D5: 78, D6: 72
+      };
+      expect(calculateChirp(entity)).toBeCloseTo(65.33, 1);
+    });
+
+    it('should handle partial dimension scores', () => {
+      const entity = {
+        id: 'partial', name: 'Test', type: 'entity',
+        sound: 5, space: 5, time: 5,
+        D1: 80, D3: 60, D5: 70
+      };
+      expect(calculateChirp(entity)).toBeCloseTo(70.0, 1);
+    });
+
+    it('should throw SemanticContractViolation when no D1-D6 scores present', () => {
+      const entity = {
+        id: 'no-dims', name: 'Test', type: 'entity',
+        sound: 5, space: 5, time: 5
+      };
+      expect(() => calculateChirp(entity)).toThrow('Chirp requires at least one D1-D6');
+    });
+  });
+
+  describe('analyze6D chirp integration', () => {
+    it('should compute chirp in analyze6D summary', () => {
+      const entity = {
+        id: 'uc-125', name: 'Test', type: 'entity',
+        sound: 7, space: 7, time: 8,
+        D1: 70, D2: 62, D3: 68, D4: 42, D5: 78, D6: 72
+      };
+      const result = analyze6D(entity, { depth: 3 });
+      expect(result.summary.chirp).toBeCloseTo(65.33, 1);
+      // averageScore should still exist (cascade-derived, separate from chirp)
+      expect(result.summary.averageScore).toBeDefined();
+    });
+
+    it('should leave chirp=0 when entity has no D1-D6 scores', () => {
+      const entity = {
+        id: 'no-dims', name: 'Test', type: 'entity',
+        sound: 5, space: 5, time: 5
+      };
+      const result = analyze6D(entity);
+      expect(result.summary.chirp).toBe(0);
+    });
+
+    it('should NOT change cascade scores (3D modulation unchanged)', () => {
+      const entity = {
+        id: 'cascade-check', name: 'Test', type: 'entity',
+        sound: 7, space: 7, time: 8,
+        D5: 78,
+        dimensions: {
+          D5: { sound: 7 * 0.78, space: 7 * 0.78, time: 8 * 0.78 }
+        }
+      };
+      const result = analyze6D(entity, { depth: 3 });
+      // Cascade score uses 3D modulation (unchanged)
+      expect(result.dimensions.D5?.score).toBeCloseTo(18.6, 0);
+      // Chirp uses raw D5 score
+      expect(result.summary.chirp).toBe(78);
+    });
+  });
+
+  describe('calculateFetch with SKILL.md bands', () => {
+    it('UC-124: chirp=60.0, DRIFT=50, conf=0.82 → FETCH=2,460 EXECUTE', () => {
+      const chirp = (75 + 52 + 72 + 58 + 48 + 55) / 6;
+      expect(chirp).toBe(60);
+      const result = calculateFetch(chirp, 50, 0.82, 1000);
+      expect(result.fetchScore).toBeCloseTo(2460, 0);
+      expect(result.level).toBe('EXECUTE');
+    });
+
+    it('UC-125: chirp=65.33, DRIFT=50, conf=0.85 → FETCH=2,777 EXECUTE', () => {
+      const chirp = (70 + 62 + 68 + 42 + 78 + 72) / 6;
+      const result = calculateFetch(chirp, 50, 0.85, 1000);
+      expect(result.fetchScore).toBeCloseTo(2777, -1);
+      expect(result.level).toBe('EXECUTE');
+    });
+
+    it('UC-039 SVB: chirp=79.3, DRIFT=75, conf=0.75 → FETCH=4,461 EXECUTE', () => {
+      const result = calculateFetch(79.3, 75, 0.75, 1000);
+      expect(result.fetchScore).toBeCloseTo(4461, -1);
+      expect(result.level).toBe('EXECUTE');
+    });
+
+    it('UC-128: chirp=58.83, DRIFT=55 (non-default), conf=0.85 → FETCH=2,749', () => {
+      const chirp = (72 + 58 + 70 + 30 + 68 + 55) / 6;
+      expect(chirp).toBeCloseTo(58.83, 1);
+      const result = calculateFetch(chirp, 55, 0.85, 1000);
+      expect(result.fetchScore).toBeCloseTo(2749, -1);
+      expect(result.level).toBe('EXECUTE');
+    });
+
+    it('UC-129 prognostic: chirp=58.0, DRIFT=50, conf=0.38 → FETCH=1,102', () => {
+      const result = calculateFetch(58.0, 50, 0.38, 1000);
+      expect(result.fetchScore).toBeCloseTo(1102, -1);
+      expect(result.level).toBe('EXECUTE');
+    });
+  });
+
+  describe('confidence normalization', () => {
+    it('should normalize integer confidence > 1 to 0-1 scale', () => {
+      // PEG grammar sends 85 (integer), runtime normalizes to 0.85
+      const result = calculateFetch(60, 50, 85, 1000);
+      expect(result.components.confidence).toBe(0.85);
+      expect(result.fetchScore).toBeCloseTo(2550, 0);
+    });
+
+    it('should pass through confidence already on 0-1 scale', () => {
+      const result = calculateFetch(60, 50, 0.85, 1000);
+      expect(result.components.confidence).toBe(0.85);
+      expect(result.fetchScore).toBeCloseTo(2550, 0);
+    });
+
+    it('should handle confidence of exactly 1 (100%)', () => {
+      const result = calculateFetch(60, 50, 1, 1000);
+      expect(result.components.confidence).toBe(1);
+      expect(result.fetchScore).toBe(3000);
+    });
+  });
+
+  describe('fixed threshold bands', () => {
+    it('EXECUTE High Priority (>= 2000)', () => {
+      const result = calculateFetch(65, 50, 0.90, 1000);
+      expect(result.fetchScore).toBeCloseTo(2925, 0);
+      expect(result.level).toBe('EXECUTE');
+    });
+
+    it('EXECUTE standard (1000-1999)', () => {
+      const result = calculateFetch(30, 50, 0.70, 1000);
+      expect(result.fetchScore).toBe(1050);
+      expect(result.level).toBe('EXECUTE');
+    });
+
+    it('CONFIRM (750-999)', () => {
+      const result = calculateFetch(20, 50, 0.8, 1000);
+      expect(result.fetchScore).toBe(800);
+      expect(result.level).toBe('CONFIRM');
+    });
+
+    it('QUEUE (500-749)', () => {
+      const result = calculateFetch(15, 50, 0.7, 1000);
+      expect(result.fetchScore).toBe(525);
+      expect(result.level).toBe('QUEUE');
+    });
+
+    it('WAIT (< 500)', () => {
+      const result = calculateFetch(10, 50, 0.9, 1000);
+      expect(result.fetchScore).toBe(450);
+      expect(result.level).toBe('WAIT');
+    });
   });
 });

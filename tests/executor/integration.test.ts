@@ -19,6 +19,7 @@ function createTestDataAdapter() {
       sound: 9,
       space: 8,
       time: 9,
+      D1: 80, D2: 50, D3: 70, D4: 40, D5: 85, D6: 75,
       baseCost: 300000,
       currency: 'USD'
     },
@@ -29,6 +30,7 @@ function createTestDataAdapter() {
       sound: 3,
       space: 5,
       time: 2,
+      D1: 30, D2: 40, D3: 25, D4: 20, D5: 35, D6: 30,
       baseCost: 100000,
       currency: 'USD'
     }
@@ -101,7 +103,7 @@ describe('Executor - Integration', () => {
     const source = `
       FORAGE entities ACROSS D1 SURFACE cascade_map
       DRIFT cascade_map METHODOLOGY 85 PERFORMANCE 35
-      FETCH cascade_map THRESHOLD 1000
+      FETCH cascade_map THRESHOLD 1000 CONFIDENCE 85
     `;
 
     const compileResult = compile(source);
@@ -254,7 +256,7 @@ describe('Executor - Semantic Contracts', () => {
     const source = `
       FORAGE entities ACROSS D1, D2, D3, D5, D6 DEPTH 3 SURFACE cascade_map
       DRIFT cascade_map METHODOLOGY 85 PERFORMANCE 35
-      FETCH cascade_map THRESHOLD 1000
+      FETCH cascade_map THRESHOLD 1000 CONFIDENCE 70
     `;
 
     const compileResult = compile(source);

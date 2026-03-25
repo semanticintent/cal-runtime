@@ -28,7 +28,7 @@ import type {
   FinancialImpact
 } from '../types/index.js';
 
-import { DIMENSION_SEMANTICS as DIMS } from '../types/index.js';
+import { DIMENSION_SEMANTICS as DIMS, SemanticContractViolation } from '../types/index.js';
 
 // ============================================
 // 3D LENS SCORING
@@ -90,6 +90,43 @@ export function cascadeProbability(score: number): {
     return { level: 'low', probability: 0.3, label: 'Unlikely to cascade' };
   }
   return { level: 'minimal', probability: 0.1, label: 'Minimal cascade risk' };
+}
+
+// ============================================
+// CHIRP CALCULATION (SKILL.md)
+// ============================================
+
+/**
+ * Calculate Chirp: Simple average of raw D1-D6 dimension scores
+ *
+ * Semantic Contract: Chirp measures dimensional severity on the 0-100 scale.
+ * Independent of cascade probability analysis (3D modulation).
+ *
+ * @param entity - Entity with D1-D6 scores (0-100)
+ * @returns Chirp value (average of present dimension scores)
+ * @throws SemanticContractViolation if no D1-D6 scores are present
+ */
+export function calculateChirp(entity: Entity): number {
+  const dimKeys = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6'] as const;
+  const scores: number[] = [];
+
+  for (const key of dimKeys) {
+    const val = entity[key];
+    if (typeof val === 'number') {
+      scores.push(val);
+    }
+  }
+
+  if (scores.length === 0) {
+    throw new SemanticContractViolation(
+      'Chirp requires at least one D1-D6 dimension score on the entity. ' +
+      'Scores must be on the 0-100 scale (SKILL.md).'
+    );
+  }
+
+  return Math.round(
+    (scores.reduce((a, b) => a + b, 0) / scores.length) * 100
+  ) / 100;
 }
 
 // ============================================
@@ -221,25 +258,35 @@ export function calculateFetch(
   chirp: number,
   drift: number,
   confidence: number,
-  threshold: number
+  threshold: number = 1000
 ): FetchResult {
+  // Normalize confidence: PEG grammar parses CONFIDENCE as integer (e.g., 85)
+  // SKILL.md expects 0-1 scale. Normalize if > 1.
+  if (confidence > 1) {
+    confidence = confidence / 100;
+  }
+
   // Calculate fetch score using semantic formula
   const fetchScore = chirp * drift * confidence;
 
-  // Determine action level using observable thresholds
+  // SKILL.md fixed threshold bands (with CONFIRM retained)
   let level: FetchLevel;
-  if (fetchScore > threshold) {
+  if (fetchScore >= 2000) {
+    level = 'EXECUTE';      // High Priority
+  } else if (fetchScore >= 1000) {
     level = 'EXECUTE';
-  } else if (fetchScore > threshold * 0.5) {
+  } else if (fetchScore >= 750) {
     level = 'CONFIRM';
-  } else if (fetchScore > threshold * 0.1) {
+  } else if (fetchScore >= 500) {
     level = 'QUEUE';
   } else {
     level = 'WAIT';
   }
 
   // Generate recommendation
-  const recommendation = `Score: ${fetchScore.toFixed(2)} | Threshold: ${threshold} | Level: ${level}`;
+  const recommendation = fetchScore >= 2000
+    ? `Score: ${fetchScore.toFixed(2)} | Level: EXECUTE (High Priority)`
+    : `Score: ${fetchScore.toFixed(2)} | Level: ${level}`;
 
   // Return immutable result
   const result: FetchResult = Object.freeze({
@@ -378,6 +425,7 @@ export function analyze6D(
       dimensionsAffected: 0,
       totalScore: 0,
       averageScore: 0,
+      chirp: 0,
       cascadeDepth: depth,
       baseCost,
       estimatedImpact: Object.freeze({ min: 0, max: 0, currency: 'USD' }),
@@ -424,6 +472,14 @@ export function analyze6D(
     analysis.summary.averageScore = Math.round(
       (analysis.summary.totalScore / analysis.summary.dimensionsAffected) * 10
     ) / 10;
+  }
+
+  // SKILL.md Chirp: simple average of raw D1-D6 scores (0-100 scale)
+  // Independent of cascade probability analysis — uses entity's raw dimension scores
+  try {
+    analysis.summary.chirp = calculateChirp(entity);
+  } catch {
+    // Entity has no D1-D6 scores — chirp stays 0 (cascade-only analysis)
   }
 
   // Estimate multiplier and financial impact

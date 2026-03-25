@@ -95,11 +95,11 @@ export type DriftQuality = 'optimal' | 'moderate' | 'minimal' | 'extreme';
 /**
  * Fetch Decision Levels - Semantic Readiness States
  *
- * SEMANTIC MEANING:
- * - EXECUTE: Act immediately (score > threshold)
- * - CONFIRM: Verify before acting (score > threshold × 0.5)
- * - QUEUE: Schedule for later (score > threshold × 0.1)
- * - WAIT: Continue monitoring (score ≤ threshold × 0.1)
+ * SEMANTIC MEANING (SKILL.md fixed bands):
+ * - EXECUTE: Act immediately (fetchScore >= 1000, High Priority >= 2000)
+ * - CONFIRM: Verify before acting (fetchScore >= 750)
+ * - QUEUE: Schedule for later (fetchScore >= 500)
+ * - WAIT: Continue monitoring (fetchScore < 500)
  *
  * DETERMINATION: Based on observable score vs semantic thresholds.
  */
@@ -739,6 +739,12 @@ export interface Entity {
   sound: number;      // Observable: urgency (1-10)
   space: number;      // Observable: scope (1-10)
   time: number;       // Observable: velocity (1-10)
+  D1?: number;        // Customer dimension (0-100, 6D Methodology scale)
+  D2?: number;        // Employee dimension (0-100)
+  D3?: number;        // Revenue dimension (0-100)
+  D4?: number;        // Regulatory dimension (0-100)
+  D5?: number;        // Quality dimension (0-100)
+  D6?: number;        // Operational dimension (0-100)
   baseCost?: number;  // Observable: direct cost
   currency?: string;
   dimensions?: Partial<Record<DimensionID, DimensionSignal>>;
@@ -802,6 +808,7 @@ export interface EntitySummary {
   dimensionsAffected: number;
   totalScore: number;
   averageScore: number;
+  chirp: number;        // SKILL.md Chirp: simple average of raw D1-D6 (0-100)
   cascadeDepth: number;
   baseCost: number;
   estimatedImpact?: FinancialImpact;
