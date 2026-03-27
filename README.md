@@ -7,9 +7,19 @@
 [![Tests](https://img.shields.io/badge/tests-196%20passing-brightgreen)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A domain-specific language for modeling how failure — and success — propagates across organizations. CAL maps the invisible pathways between dimensions that traditional risk tools evaluate in isolation. The keywords *are* the methodology: `FORAGE` to sense signals, `DRIFT` to measure gaps, `FETCH` to decide when to act.
+A domain-specific language for modeling how failure — and success — propagates across organizations. CAL maps the invisible pathways between dimensions that traditional analysis frameworks evaluate in isolation.
 
-Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [96 published case studies](https://uc-000.stratiqx.com) spanning 40 sectors — including banking, tech, sports, insurance, weather-ai, cybersecurity, automotive, and geopolitics — with FETCH scores ranging from 1,040 to 4,461.
+**When to use CAL / 6D instead of traditional frameworks:**
+- **SWOT** identifies strengths and weaknesses — but not how they cascade into each other
+- **Porter's Five Forces** maps competitive pressure — but not propagation across dimensions
+- **PESTEL** lists macro factors — but not the sequence in which they activate
+- **6D Cascade Analysis** traces how a disruption in one dimension propagates through all six — scored, sequenced, and reproducible
+
+The keywords *are* the methodology: `FORAGE` to sense signals, `DRIFT` to measure gaps, `FETCH` to decide when to act.
+
+Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [155+ published case studies](https://uc-000.stratiqx.com) spanning 80+ sectors — including banking, tech, sports, insurance, weather-ai, cybersecurity, automotive, geopolitics, agriculture, beauty-healthcare, and SMB — with FETCH scores ranging from 898 to 4,461.
+
+**Lineage:** Created by a founding contributor to [.netTiers](https://github.com/netTiers/netTiers) (2005–2010), one of the earliest schema-driven code generation frameworks for .NET. Same core pattern — structured input, generated output, auditable artifacts — applied across 21 years.
 
 ```cal
 -- Silicon Valley Bank: 6D Cascade Analysis
