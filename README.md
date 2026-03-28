@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/@stratiqx/cal-runtime)](https://www.npmjs.com/package/@stratiqx/cal-runtime)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18905193.svg)](https://doi.org/10.5281/zenodo.18905193)
-[![Tests](https://img.shields.io/badge/tests-196%20passing-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-229%20passing-brightgreen)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A domain-specific language for modeling how failure — and success — propagates across organizations. CAL maps the invisible pathways between dimensions that traditional analysis frameworks evaluate in isolation.
@@ -15,9 +15,9 @@ A domain-specific language for modeling how failure — and success — propagat
 - **PESTEL** lists macro factors — but not the sequence in which they activate
 - **6D Cascade Analysis** traces how a disruption in one dimension propagates through all six — scored, sequenced, and reproducible
 
-The keywords *are* the methodology: `FORAGE` to sense signals, `DRIFT` to measure gaps, `FETCH` to decide when to act.
+The keywords *are* the methodology: `FORAGE` to sense signals, `DRIFT` to measure gaps, `FETCH` to decide when to act, `RECALL` to validate predictions.
 
-Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [155+ published case studies](https://uc-000.stratiqx.com) spanning 80+ sectors — including banking, tech, sports, insurance, weather-ai, cybersecurity, automotive, geopolitics, agriculture, beauty-healthcare, and SMB — with FETCH scores ranging from 898 to 4,461.
+Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [160+ published case studies](https://uc-000.stratiqx.com) spanning 80+ sectors — including banking, tech, sports, insurance, weather-ai, cybersecurity, automotive, geopolitics, agriculture, beauty-healthcare, and SMB — with FETCH scores ranging from 898 to 4,461.
 
 **Lineage:** Created by a founding contributor to [.netTiers](https://github.com/netTiers/netTiers) (2005–2010), one of the earliest schema-driven code generation frameworks for .NET. Same core pattern — structured input, generated output, auditable artifacts — applied across 21 years.
 
@@ -50,6 +50,29 @@ ON EXECUTE CHIRP critical "6/6 dimensions compromised in 48 hours"
 SURFACE analysis AS json
 ```
 
+### Prognostic Validation (v1.2)
+
+```cal
+-- UC-062: The Escape Hatch — Review at 30 days
+RECALL escape_hatch ON "2026-04-15"
+
+  WATCH compression_ceiling STATUS fired
+    FIRED_DATE "2026-02-26"
+    EVIDENCE "C3 AI layoffs produced stock decline."
+
+  WATCH consumer_collapse STATUS not_fired
+    EVIDENCE "NFP remained positive through review window."
+
+  TRIGGERS 1/2
+  CONFIDENCE_STATED 0.33
+  CONFIDENCE_ACTUAL 0.50
+  CALIBRATION aligned
+
+SURFACE validation AS json
+```
+
+> `RECALL` closes the loop: `SENSE → ANALYZE → MEASURE → DECIDE → ACT → VALIDATE`. Every prognostic case with WATCH triggers can be formally validated when the review date arrives.
+
 > This script is from [UC-039: The 48-Hour Cascade](https://uc-039.stratiqx.com) — the highest FETCH score (4,461) in a library of [96 published case studies](https://uc-000.stratiqx.com). Watch the [70-second video breakdown](https://youtu.be/Tid3EFP5uVY).
 
 ## The 5-Layer Pipeline
@@ -63,6 +86,7 @@ CAL scripts follow a deterministic pipeline that maps directly to the [6D Foragi
 | **MEASURE** | `DRIFT`, `METHODOLOGY`, `PERFORMANCE` | Quantify the gap between expected and actual capability |
 | **DECIDE** | `FETCH`, `THRESHOLD`, `ON EXECUTE/CONFIRM/QUEUE/WAIT` | Route action based on `FETCH = Chirp × |DRIFT| × Confidence` |
 | **ACT** | `CHIRP`, `SURFACE` | Alert and output results |
+| **VALIDATE** | `RECALL` | Validate prognostic predictions against observed outcomes |
 
 ## 6D Dimensions
 
@@ -129,11 +153,11 @@ CAL Script → PEG Parser → Action Plan → Executor → Results
                               Data Adapters + Alert Adapters
 ```
 
-- **Parser**: PEG grammar (Peggy) — 11 keywords, deterministic parse
-- **Executor**: Layer-by-layer pipeline execution
+- **Parser**: PEG grammar (Peggy) — 12 keywords, deterministic parse
+- **Executor**: 6-layer pipeline execution (Sense → Analyze → Measure → Decide → Act → Validate)
 - **Data Adapters**: JSON, memory, composite (pluggable)
 - **Alert Adapters**: Console, file, webhook (pluggable)
-- **Test Suite**: 196 tests across 8 suites
+- **Test Suite**: 229 tests across 9 suites
 
 ## Examples
 
@@ -156,7 +180,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 | [CAL Runtime](https://github.com/semanticintent/cal-runtime) | This repo — the execution engine |
 | [CAL Specification](https://cal.cormorantforaging.dev) | Language reference (40+ pages) |
 | [6D Methodology](https://6d.cormorantforaging.dev) | Dimensional analysis framework |
-| [Case Library](https://uc-000.stratiqx.com) | 96 published analyses across 40 sectors |
+| [Case Library](https://uc-000.stratiqx.com) | 160+ published analyses across 80+ sectors |
 | [StratIQX Intelligence](https://stratiqx.com) | Cascade intelligence platform |
 | [Cormorant Foraging](https://cormorantforaging.dev) | Foundational behavioral methodology |
 
@@ -174,7 +198,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 
 ```bash
 npm install          # Install dependencies
-npm test             # Run 196 tests
+npm test             # Run 229 tests
 npm run build        # Build for production
 npm run typecheck    # Type checking
 ```
