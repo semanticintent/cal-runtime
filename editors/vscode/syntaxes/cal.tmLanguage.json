@@ -11,6 +11,7 @@
     { "include": "#keywords-layer3" },
     { "include": "#keywords-layer4" },
     { "include": "#keywords-layer5" },
+    { "include": "#keywords-layer6" },
     { "include": "#keywords-clauses" },
     { "include": "#keywords-operators" },
     { "include": "#alert-types" },
@@ -59,7 +60,7 @@
       "patterns": [
         {
           "name": "keyword.control.sense.cal",
-          "match": "\\b(FORAGE|PERCH|LISTEN|WAKE)\\b"
+          "match": "\\b(FORAGE|PERCH|LISTEN|WAKE|WATCH)\\b"
         }
       ]
     },
@@ -96,6 +97,23 @@
         {
           "name": "keyword.control.act.cal",
           "match": "\\b(CHIRP|SURFACE)\\b"
+        }
+      ]
+    },
+    "keywords-layer6": {
+      "comment": "VALIDATE layer — prognostic validation (v1.2)",
+      "patterns": [
+        {
+          "name": "keyword.control.validate.cal",
+          "match": "\\b(RECALL)\\b"
+        },
+        {
+          "name": "keyword.other.recall.cal",
+          "match": "\\b(STATUS|FIRED_DATE|EVIDENCE|TRIGGERS|CONFIDENCE_STATED|CONFIDENCE_ACTUAL|CALIBRATION|DRIFT_AFTER)\\b"
+        },
+        {
+          "name": "support.type.recall-status.cal",
+          "match": "\\b(fired|not_fired|partial|aligned|over|under)\\b"
         }
       ]
     },
