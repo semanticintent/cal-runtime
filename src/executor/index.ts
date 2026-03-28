@@ -225,6 +225,7 @@ export class Executor {
       alert: this.handleAlert.bind(this),
       traceCascade: this.handleTraceCascade.bind(this),
       watch: this.handleWatch.bind(this),
+      recall: this.handleRecall.bind(this),
       output: this.handleOutput.bind(this)
     };
 
@@ -604,6 +605,80 @@ export class Executor {
       status: 'active',
       message: `Watching ${target}`
     };
+  }
+
+  /**
+   * RECALL Handler - Prognostic Validation
+   *
+   * SEMANTIC INTENT: Retrieve and validate prognostic predictions against
+   * observed outcomes. Closes the SENSE→ACT→VALIDATE loop.
+   *
+   * Validates calibration consistency, builds immutable result,
+   * and stores as episodic outcome for GESA integration.
+   */
+  private async handleRecall(action: any): Promise<any> {
+    const {
+      target, date, watches, triggersFired, triggersTotal,
+      confidenceStated, confidenceActual, calibration,
+      driftAfter, surfaceOutput, surfaceFormat
+    } = action;
+
+    // 1. Validate calibration consistency
+    const delta = Math.abs(confidenceStated - confidenceActual);
+    const roundedDelta = Math.round(delta * 100) / 100;
+    let expectedCalibration: 'aligned' | 'over' | 'under';
+    if (roundedDelta <= 0.10) {
+      expectedCalibration = 'aligned';
+    } else if (confidenceStated > confidenceActual) {
+      expectedCalibration = 'over';
+    } else {
+      expectedCalibration = 'under';
+    }
+
+    const validated = (calibration === expectedCalibration);
+
+    // 2. Build interpretation
+    let interpretation: string;
+    if (calibration === 'aligned') {
+      interpretation = `Calibration aligned: stated ${confidenceStated} vs actual ${confidenceActual} (delta ${roundedDelta}). ` +
+        `${triggersFired}/${triggersTotal} triggers fired.`;
+    } else if (calibration === 'over') {
+      interpretation = `Over-confident: stated ${confidenceStated} exceeded actual ${confidenceActual} by ${roundedDelta}. ` +
+        `${triggersFired}/${triggersTotal} triggers fired.`;
+    } else {
+      interpretation = `Under-confident: stated ${confidenceStated} was below actual ${confidenceActual} by ${roundedDelta}. ` +
+        `${triggersFired}/${triggersTotal} triggers fired.`;
+    }
+
+    // 3. Build immutable result
+    const result = Object.freeze({
+      target,
+      date,
+      watches: Object.freeze(watches.map((w: any) => Object.freeze({ ...w }))),
+      triggersFired,
+      triggersTotal,
+      confidenceStated,
+      confidenceActual,
+      calibration,
+      calibrationDelta: roundedDelta,
+      driftAfter: driftAfter ?? null,
+      validated,
+      interpretation,
+    });
+
+    // 4. Store in results
+    this.results[`${target}_recall`] = result;
+
+    // 5. Handle optional SURFACE output
+    if (surfaceOutput) {
+      this.results[surfaceOutput] = {
+        format: surfaceFormat || 'json',
+        data: result,
+        generated: new Date().toISOString(),
+      };
+    }
+
+    return { success: true, ...result };
   }
 
   private async handleOutput(action: any): Promise<any> {

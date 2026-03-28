@@ -23,6 +23,7 @@ import type {
   ChirpStatement,
   TraceStatement,
   SurfaceStatement,
+  RecallStatement,
   ActionPlan,
   ParseResult,
   ParseSuccess,
@@ -169,6 +170,9 @@ function transformStatement(stmt: Statement, plan: ActionPlan): void {
     case 'Watch':
       transformWatch(stmt, plan);
       break;
+    case 'Recall':
+      transformRecall(stmt as RecallStatement, plan);
+      break;
     case 'Surface':
       transformSurface(stmt, plan);
       break;
@@ -307,6 +311,23 @@ function transformWatch(stmt: any, plan: ActionPlan): void {
   });
 }
 
+function transformRecall(stmt: RecallStatement, plan: ActionPlan): void {
+  plan.actions.push({
+    action: 'recall',
+    target: stmt.target,
+    date: stmt.date,
+    watches: stmt.watches,
+    triggersFired: stmt.triggersFired,
+    triggersTotal: stmt.triggersTotal,
+    confidenceStated: stmt.confidenceStated,
+    confidenceActual: stmt.confidenceActual,
+    calibration: stmt.calibration,
+    driftAfter: stmt.driftAfter ?? null,
+    surfaceOutput: stmt.surfaceOutput ?? null,
+    surfaceFormat: stmt.surfaceFormat ?? null,
+  });
+}
+
 function transformSurface(stmt: SurfaceStatement, plan: ActionPlan): void {
   plan.actions.push({
     action: 'output',
@@ -370,7 +391,7 @@ export function validateSemanticContracts(plan: ActionPlan): boolean {
   // Rule 1: All actions must have semantic action types
   const validActions = [
     'query', 'analyze', 'drift', 'fetch', 'observe',
-    'monitor', 'schedule', 'alert', 'traceCascade', 'watch', 'output'
+    'monitor', 'schedule', 'alert', 'traceCascade', 'watch', 'recall', 'output'
   ];
 
   for (const action of plan.actions) {

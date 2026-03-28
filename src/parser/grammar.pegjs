@@ -37,6 +37,7 @@ Statement
   / WakeStatement
   / ChirpStatement
   / TraceStatement
+  / RecallStatement
   / WatchStatement
   / SurfaceStatement
 
@@ -295,6 +296,85 @@ FromClause
 // ============================================
 
 // ============================================
+// RECALL - Prognostic validation (v1.2)
+// ============================================
+
+RecallStatement
+  = RECALL _ target:Identifier _ ON _ date:StringLiteral _
+    watches:RecallWatchClause+ _
+    triggers:TriggersClause _
+    confStated:ConfidenceStatedClause _
+    confActual:ConfidenceActualClause _
+    calibration:CalibrationClause _
+    driftAfter:DriftAfterClause? _
+    surface:RecallSurfaceClause? _ {
+      return {
+        type: "Recall",
+        target: target,
+        date: date,
+        watches: watches,
+        triggersFired: triggers.triggersFired,
+        triggersTotal: triggers.triggersTotal,
+        confidenceStated: confStated,
+        confidenceActual: confActual,
+        calibration: calibration,
+        driftAfter: driftAfter || undefined,
+        surfaceOutput: surface ? surface.surfaceOutput : undefined,
+        surfaceFormat: surface ? surface.surfaceFormat : undefined
+      };
+    }
+
+RecallWatchClause
+  = WATCH _ triggerId:Identifier _ STATUS _ status:RecallStatus _
+    firedDate:FiredDateClause? _
+    evidence:EvidenceClause? _ {
+      return {
+        triggerId: triggerId,
+        status: status,
+        firedDate: firedDate || null,
+        evidence: evidence || null
+      };
+    }
+
+RecallStatus
+  = "fired"i { return "fired"; }
+  / "not_fired"i { return "not_fired"; }
+  / "partial"i { return "partial"; }
+
+FiredDateClause
+  = FIRED_DATE _ date:StringLiteral _ { return date; }
+
+EvidenceClause
+  = EVIDENCE _ text:StringLiteral _ { return text; }
+
+TriggersClause
+  = TRIGGERS _ fired:Integer "/" total:Integer _ {
+      return { triggersFired: fired, triggersTotal: total };
+    }
+
+ConfidenceStatedClause
+  = CONFIDENCE_STATED _ value:Number _ { return value; }
+
+ConfidenceActualClause
+  = CONFIDENCE_ACTUAL _ value:Number _ { return value; }
+
+CalibrationClause
+  = CALIBRATION _ value:CalibrationValue _ { return value; }
+
+CalibrationValue
+  = "aligned"i { return "aligned"; }
+  / "over"i { return "over"; }
+  / "under"i { return "under"; }
+
+DriftAfterClause
+  = DRIFT_AFTER _ score:Number _ { return score; }
+
+RecallSurfaceClause
+  = SURFACE _ what:Identifier _ AS _ format:Identifier _ {
+      return { surfaceOutput: what, surfaceFormat: format };
+    }
+
+// ============================================
 // WATCH - Continuous condition monitoring
 // ============================================
 
@@ -501,6 +581,15 @@ CONFIRM = "CONFIRM"i
 QUEUE = "QUEUE"i
 WAIT = "WAIT"i
 WATCH = "WATCH"i
+RECALL = "RECALL"i
+STATUS = "STATUS"i
+FIRED_DATE = "FIRED_DATE"i
+EVIDENCE = "EVIDENCE"i
+TRIGGERS = "TRIGGERS"i
+CONFIDENCE_STATED = "CONFIDENCE_STATED"i
+CONFIDENCE_ACTUAL = "CONFIDENCE_ACTUAL"i
+CALIBRATION = "CALIBRATION"i
+DRIFT_AFTER = "DRIFT_AFTER"i
 
 // ============================================
 // WHITESPACE & COMMENTS

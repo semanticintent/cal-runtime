@@ -51,6 +51,7 @@ export type CALKeyword =
   | 'chirp'
   | 'trace'
   | 'watch'
+  | 'recall'
   | 'surface';
 
 /**
@@ -151,6 +152,7 @@ export type Statement =
   | ChirpStatement
   | TraceStatement
   | WatchStatement
+  | RecallStatement
   | SurfaceStatement;
 
 /**
@@ -315,6 +317,71 @@ export interface WatchStatement {
 }
 
 /**
+ * RECALL Trigger Status - Prognostic Validation Outcomes
+ *
+ * SEMANTIC MEANING:
+ * - fired: Trigger condition was met within the review window
+ * - not_fired: Trigger condition was not met within the review window
+ * - partial: Trigger condition partially met — threshold not fully crossed
+ */
+export type RecallTriggerStatus = 'fired' | 'not_fired' | 'partial';
+
+/**
+ * Calibration Type - Confidence Accuracy Assessment
+ *
+ * SEMANTIC MEANING:
+ * - aligned: |stated - actual| <= 0.10 (within 10 percentage points)
+ * - over: stated confidence exceeded actual by > 0.10
+ * - under: stated confidence was below actual by > 0.10
+ */
+export type CalibrationType = 'aligned' | 'over' | 'under';
+
+/**
+ * RECALL Watch Result - Individual Trigger Outcome
+ *
+ * SEMANTIC INTENT: Record the observed outcome of a single WATCH trigger.
+ */
+export interface RecallWatchResult {
+  triggerId: string;
+  status: RecallTriggerStatus;
+  firedDate: string | null;
+  evidence: string | null;
+}
+
+/**
+ * RECALL Statement - Prognostic Validation
+ *
+ * SEMANTIC INTENT: Cormorant recalls where it hunted, what it caught,
+ * and whether conditions matched. The read side of the memory system —
+ * WAKE stores patterns, RECALL retrieves and verifies them.
+ *
+ * OBSERVABLE PROPERTIES:
+ * - target: Case entity being recalled (matches original SURFACE entity)
+ * - date: Review date (ISO format)
+ * - watches: Per-trigger outcomes with evidence
+ * - triggersFired/triggersTotal: Aggregate trigger results
+ * - confidenceStated/confidenceActual: Calibration measurement
+ * - calibration: Assessment (aligned/over/under)
+ * - driftAfter: Updated DRIFT score post-review
+ *
+ * Added in v1.2 (first prognostic review window, April 2026).
+ */
+export interface RecallStatement {
+  type: 'Recall';
+  target: string;
+  date: string;
+  watches: RecallWatchResult[];
+  triggersFired: number;
+  triggersTotal: number;
+  confidenceStated: number;
+  confidenceActual: number;
+  calibration: CalibrationType;
+  driftAfter?: number;
+  surfaceOutput?: string;
+  surfaceFormat?: string;
+}
+
+/**
  * SURFACE Statement - Return Results
  *
  * SEMANTIC INTENT: Bring results to surface (output).
@@ -429,6 +496,7 @@ export type Action =
   | AlertAction
   | TraceCascadeAction
   | WatchAction
+  | RecallAction
   | OutputAction;
 
 /**
@@ -548,6 +616,27 @@ export interface WatchAction {
 }
 
 /**
+ * Recall Action - RECALL Execution
+ *
+ * SEMANTIC INTENT: Retrieve and validate prognostic predictions against
+ * observed outcomes. Closes the SENSE→ACT→VALIDATE loop.
+ */
+export interface RecallAction {
+  action: 'recall';  // Semantic: RECALL
+  target: string;
+  date: string;
+  watches: RecallWatchResult[];
+  triggersFired: number;
+  triggersTotal: number;
+  confidenceStated: number;
+  confidenceActual: number;
+  calibration: CalibrationType;
+  driftAfter: number | null;
+  surfaceOutput: string | null;
+  surfaceFormat: string | null;
+}
+
+/**
  * Output Action - SURFACE Execution
  */
 export interface OutputAction {
@@ -638,6 +727,38 @@ export type FetchResult = Readonly<{
     confidence: number;
   }>;
   recommendation: string;
+}>;
+
+/**
+ * RECALL Result - Immutable Prognostic Validation
+ *
+ * SEMANTIC INTENT: Complete validation record for a prognostic case.
+ * Records trigger outcomes, calibration accuracy, and interpretation.
+ *
+ * OBSERVABLE PROPERTIES:
+ * - watches: Per-trigger outcomes with evidence
+ * - calibrationDelta: |stated - actual| distance
+ * - validated: Whether declared calibration matches computed
+ * - interpretation: Human-readable assessment
+ *
+ * SEMANTIC CONTRACT:
+ * - calibration MUST match delta calculation
+ * - Result MUST be immutable (Object.freeze)
+ * - Feeds into GESA episodic memory as outcome record
+ */
+export type RecallResult = Readonly<{
+  target: string;
+  date: string;
+  watches: ReadonlyArray<Readonly<RecallWatchResult>>;
+  triggersFired: number;
+  triggersTotal: number;
+  confidenceStated: number;
+  confidenceActual: number;
+  calibration: CalibrationType;
+  calibrationDelta: number;
+  driftAfter: number | null;
+  validated: boolean;
+  interpretation: string;
 }>;
 
 // ============================================
