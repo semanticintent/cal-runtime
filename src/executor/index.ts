@@ -16,7 +16,9 @@ import type {
   Entity,
   DimensionID,
   CascadeAnalysis,
-  DriftResult
+  DriftResult,
+  WatchDuration,
+  WatchAction
 } from '../types/index.js';
 
 import { SemanticContractViolation } from '../types/index.js';
@@ -95,8 +97,10 @@ export interface Watcher {
   id: string;
   type: 'observe' | 'monitor';
   target?: any;
+  condition?: any[];
   signals?: any[];
-  timeout?: any;
+  timeout?: WatchDuration;
+  periodsMatched?: number;
   onSignal?: any;
   created: string;
   status: 'active' | 'expired' | 'triggered';
@@ -580,30 +584,53 @@ export class Executor {
   /**
    * Handle WATCH → watch
    * Semantic: Cormorant watches for condition (sustained temporal observation)
+   *
+   * With optional FOR clause: fires only after condition holds for N
+   * consecutive periods (quarters/years) or continuous duration (mo/d/etc).
    */
-  private async handleWatch(action: any): Promise<any> {
-    const { target, condition } = action;
+  private async handleWatch(action: WatchAction): Promise<any> {
+    const { target, condition, duration } = action;
 
-    const watcher = {
+    const watcher: Watcher = {
       id: `watch_${target}_${Date.now()}`,
+      type: 'monitor',
       target,
       condition,
       created: new Date().toISOString(),
-      status: 'active'
+      status: 'active',
+      ...(duration && {
+        timeout: duration,
+        periodsMatched: 0
+      })
     };
 
-    // Store watcher in results for downstream access
-    if (!this.results['_watchers']) {
-      this.results['_watchers'] = [];
+    this.watchers.push(watcher);
+
+    // For period units, register a ScheduledTask so the host system can
+    // track period-boundary evaluations and increment periodsMatched
+    if (duration && isPeriodUnit(duration.unit)) {
+      const task: ScheduledTask = {
+        id: `watcher_timeout_${watcher.id}`,
+        type: 'watcher_timeout',
+        delay: duration,
+        action: { watcherId: watcher.id },
+        created: new Date().toISOString(),
+        status: 'pending'
+      };
+      this.scheduledTasks.push(task);
     }
-    this.results['_watchers'].push(watcher);
+
+    const message = duration
+      ? `Watching ${target} — fires after condition holds for ${duration.value} ${duration.unit}`
+      : `Watching ${target}`;
 
     return {
       success: true,
       watcherId: watcher.id,
       target,
       status: 'active',
-      message: `Watching ${target}`
+      duration: duration || null,
+      message
     };
   }
 
@@ -814,6 +841,14 @@ export class Executor {
   getAllResults(): Record<string, any> {
     return { ...this.results };
   }
+}
+
+/**
+ * Returns true for period units (discrete measurement events).
+ * Period units use periodsMatched counter; duration units use elapsed time.
+ */
+function isPeriodUnit(unit: WatchDuration['unit']): boolean {
+  return unit === 'quarters' || unit === 'years';
 }
 
 /**

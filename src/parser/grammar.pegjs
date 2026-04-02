@@ -379,13 +379,28 @@ RecallSurfaceClause
 // ============================================
 
 WatchStatement
-  = WATCH _ target:Identifier _ WHEN _ conditions:ConditionList _ {
+  = WATCH _ target:Identifier _ WHEN _ conditions:ConditionList duration:WatchDurationClause? _ {
       return {
         type: "Watch",
         target: target,
-        when: conditions
+        when: conditions,
+        for: duration || null
       };
     }
+
+WatchDurationClause
+  = _ FOR _ value:Integer _ unit:WatchTimeUnit _ {
+      return { value: value, unit: unit };
+    }
+
+WatchTimeUnit
+  = "quarters" { return "quarters"; }
+  / "years"    { return "years"; }
+  / "mo"       { return "months"; }
+  / "w"        { return "weeks"; }
+  / "d"        { return "days"; }
+  / "h"        { return "hours"; }
+  / "m"        { return "minutes"; }
 
 // ============================================
 // SURFACE - Return results (with optional scheduled resurface)

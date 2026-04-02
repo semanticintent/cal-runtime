@@ -24,6 +24,7 @@ import type {
   TraceStatement,
   SurfaceStatement,
   RecallStatement,
+  WatchAction,
   ActionPlan,
   ParseResult,
   ParseSuccess,
@@ -304,11 +305,17 @@ function transformTrace(stmt: TraceStatement, plan: ActionPlan): void {
 }
 
 function transformWatch(stmt: any, plan: ActionPlan): void {
-  plan.actions.push({
+  const watchAction: WatchAction = {
     action: 'watch',
     target: stmt.target,
     condition: stmt.when
-  });
+  };
+
+  if (stmt.for) {
+    watchAction.duration = stmt.for;
+  }
+
+  plan.actions.push(watchAction);
 }
 
 function transformRecall(stmt: RecallStatement, plan: ActionPlan): void {

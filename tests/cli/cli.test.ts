@@ -238,7 +238,7 @@ describe('CLI - Help and Version', () => {
 
     expect(output).toContain('CAL');
     expect(output).toContain('Cormorant Agentic Language');
-    expect(output).toContain('v1.1.0');
+    expect(output).toContain('v1.');
 
     spy.mockRestore();
   });

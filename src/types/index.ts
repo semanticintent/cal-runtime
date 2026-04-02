@@ -309,11 +309,13 @@ export interface TraceStatement {
  * OBSERVABLE PROPERTIES:
  * - target: Named trigger to monitor
  * - when: Condition that fires the trigger
+ * - for: Optional temporal persistence clause (fires after N periods/duration)
  */
 export interface WatchStatement {
   type: 'Watch';
   target: string;
   when: Condition[];
+  for?: WatchDuration | null;
 }
 
 /**
@@ -437,6 +439,18 @@ export interface Signal {
 export interface Duration {
   value: number;
   unit: 'days' | 'hours' | 'minutes' | 'weeks' | 'months';
+}
+
+/**
+ * WatchDuration - Temporal Duration for WATCH…FOR clause
+ *
+ * Extends Duration with period units (quarters, years) that count
+ * discrete measurement events rather than continuous elapsed time.
+ * Kept separate from Duration so WAKE semantics are not affected.
+ */
+export interface WatchDuration {
+  value: number;
+  unit: 'days' | 'hours' | 'minutes' | 'weeks' | 'months' | 'quarters' | 'years';
 }
 
 /**
@@ -613,6 +627,7 @@ export interface WatchAction {
   action: 'watch';  // Semantic: WATCH
   target: string;
   condition: Condition[];
+  duration?: WatchDuration;  // Optional temporal persistence clause
 }
 
 /**

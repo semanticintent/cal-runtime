@@ -4,7 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/@stratiqx/cal-runtime)](https://www.npmjs.com/package/@stratiqx/cal-runtime)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18905193.svg)](https://doi.org/10.5281/zenodo.18905193)
-[![Tests](https://img.shields.io/badge/tests-229%20passing-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-251%20passing-brightgreen)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A domain-specific language for modeling how failure — and success — propagates across organizations. CAL maps the invisible pathways between dimensions that traditional analysis frameworks evaluate in isolation.
@@ -17,7 +17,7 @@ A domain-specific language for modeling how failure — and success — propagat
 
 The keywords *are* the methodology: `FORAGE` to sense signals, `DRIFT` to measure gaps, `FETCH` to decide when to act, `RECALL` to validate predictions.
 
-Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [160+ published case studies](https://uc-000.stratiqx.com) spanning 80+ sectors — including banking, tech, sports, insurance, weather-ai, cybersecurity, automotive, geopolitics, agriculture, beauty-healthcare, and SMB — with FETCH scores ranging from 898 to 4,461.
+Built on the [6D Foraging Methodology](https://6d.cormorantforaging.dev). Battle-tested across [228+ published case studies](https://uc-000.stratiqx.com) spanning 148+ sectors — including banking, tech, sports, insurance, weather-ai, cybersecurity, automotive, geopolitics, agriculture, beauty-healthcare, and SMB — with FETCH scores ranging from 898 to 4,461.
 
 **Lineage:** Created by a founding contributor to [.netTiers](https://github.com/netTiers/netTiers) (2005–2010), one of the earliest schema-driven code generation frameworks for .NET. Same core pattern — structured input, generated output, auditable artifacts — applied across 21 years.
 
@@ -73,7 +73,34 @@ SURFACE validation AS json
 
 > `RECALL` closes the loop: `SENSE → ANALYZE → MEASURE → DECIDE → ACT → VALIDATE`. Every prognostic case with WATCH triggers can be formally validated when the review date arrives.
 
-> This script is from [UC-039: The 48-Hour Cascade](https://uc-039.stratiqx.com) — the highest FETCH score (4,461) in a library of [96 published case studies](https://uc-000.stratiqx.com). Watch the [70-second video breakdown](https://youtu.be/Tid3EFP5uVY).
+> This script is from [UC-039: The 48-Hour Cascade](https://uc-039.stratiqx.com) — the highest FETCH score (4,461) in a library of [228 published case studies](https://uc-000.stratiqx.com). Watch the [70-second video breakdown](https://youtu.be/Tid3EFP5uVY).
+
+### Temporal Duration Monitoring (v1.3)
+
+`WATCH` now supports an optional `FOR` clause that requires a condition to hold across N consecutive periods before the trigger fires. A single bad quarter is noise; a condition sustained across multiple periods is a structural signal.
+
+```cal
+-- Point-in-time (unchanged — fires on first true evaluation)
+WATCH inflation_spike WHEN cpi_yoy > 0.05
+
+-- Duration persistence: fires after 6 continuous months
+WATCH demand_erosion WHEN monthly_bookings < 10000 FOR 6mo
+
+-- Period persistence: fires after 2 consecutive quarterly evaluations
+WATCH nvidia_deceleration WHEN nvidia_yoy_growth < 0.20 FOR 2 quarters
+
+-- Longer structural signal: 3 consecutive annual filings
+WATCH services_reversal WHEN bea_services_share_declining = true FOR 3 years
+```
+
+**Unit semantics:**
+
+| Unit | Type | Behaviour |
+|------|------|-----------|
+| `d`, `h`, `m`, `w`, `mo` | Duration | Condition must hold continuously for the elapsed wall-clock time |
+| `quarters`, `years` | Period | Condition must be true in N consecutive discrete measurement events |
+
+Period units (`quarters`, `years`) register a `ScheduledTask` of type `watcher_timeout` so a host system can increment `periodsMatched` on each evaluation and transition the watcher to `triggered` when `periodsMatched >= FOR value`. A period where the condition is false resets the count.
 
 ## The 5-Layer Pipeline
 
@@ -157,7 +184,7 @@ CAL Script → PEG Parser → Action Plan → Executor → Results
 - **Executor**: 6-layer pipeline execution (Sense → Analyze → Measure → Decide → Act → Validate)
 - **Data Adapters**: JSON, memory, composite (pluggable)
 - **Alert Adapters**: Console, file, webhook (pluggable)
-- **Test Suite**: 229 tests across 9 suites
+- **Test Suite**: 251 tests across 11 suites
 
 ## Examples
 
@@ -198,7 +225,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 
 ```bash
 npm install          # Install dependencies
-npm test             # Run 229 tests
+npm test             # Run 251 tests
 npm run build        # Build for production
 npm run typecheck    # Type checking
 ```
