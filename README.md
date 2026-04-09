@@ -196,7 +196,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 
 ## Documentation
 
-- **Language Spec**: [cal.cormorantforaging.dev](https://cal.cormorantforaging.dev)
+- **Language Spec**: [cal.semanticintent.dev](https://cal.semanticintent.dev)
 - **API Reference**: [docs/API.md](./docs/API.md)
 - **Architecture**: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
 
@@ -205,7 +205,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 | Component | What It Is |
 |-----------|-----------|
 | [CAL Runtime](https://github.com/semanticintent/cal-runtime) | This repo — the execution engine |
-| [CAL Specification](https://cal.cormorantforaging.dev) | Language reference (40+ pages) |
+| [CAL Specification](https://cal.semanticintent.dev) | Language reference (40+ pages) |
 | [6D Methodology](https://6d.cormorantforaging.dev) | Dimensional analysis framework |
 | [Case Library](https://uc-000.stratiqx.com) | 160+ published analyses across 80+ sectors |
 | [StratIQX Intelligence](https://stratiqx.com) | Cascade intelligence platform |
