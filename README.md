@@ -137,9 +137,9 @@ npm install @stratiqx/cal-runtime
 ```
 
 ```javascript
-import { parse, execute } from '@stratiqx/cal-runtime';
+import { compile, Executor, createDataAdapter } from '@stratiqx/cal-runtime';
 
-const result = parse(`
+const result = compile(`
   FORAGE entities
   WHERE sound > 7
   ACROSS D1, D2, D3
@@ -152,14 +152,43 @@ const result = parse(`
 
   FETCH cascade_map
   THRESHOLD 1000
+  CONFIDENCE 90
   ON EXECUTE CHIRP critical "Cascade detected"
 `);
 
-const output = await execute(result.actionPlan, {
-  entities: [
-    { id: 'svb', sound: 9, space: 9, time: 10, dimensions: { D1: 88, D3: 82, D5: 78 } }
-  ]
+// Entities feed FORAGE via a data adapter — dimension scores (D1-D6) are
+// flat properties on the entity, not a nested object.
+const dataAdapter = createDataAdapter({
+  type: 'memory',
+  initialData: {
+    entities: [
+      { id: 'svb', sound: 9, space: 9, time: 10, D1: 88, D3: 82, D5: 78 }
+    ]
+  }
 });
+
+const executor = new Executor({ dataAdapter });
+const output = await executor.execute(result.actionPlan);
+// output.outputs.cascade_map_fetch → { fetchScore, level, components, recommendation }
+```
+
+### Computing DRIFT/FETCH Directly (v1.4)
+
+For validating or generating a pre-authored score (e.g. checking a
+published FETCH figure reconciles with its own inputs) without running a
+full CAL script through the executor, `calculateDrift`/`calculateFetch`
+are available standalone — the same formulas the language itself defines:
+
+```javascript
+import { calculateDrift, calculateFetch } from '@stratiqx/cal-runtime';
+
+const drift = calculateDrift(85, 35);   // methodology, performance
+// { drift: 50, absDrift: 50, gapType: 'teaching', driftQuality: 'extreme', ... }
+
+const fetch = calculateFetch(82.67, drift.absDrift, 0.9, 1000);
+// chirp, drift, confidence (0-1 — normalized automatically if given as
+// a percentage integer, e.g. 90), threshold
+// { fetchScore: 3720.15, level: 'EXECUTE', components: {...}, recommendation: '...' }
 ```
 
 ### CLI

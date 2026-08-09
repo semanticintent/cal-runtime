@@ -1,9 +1,8 @@
 {
   "name": "@stratiqx/cal-runtime",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "CAL (Cascade Analysis Language) - 6D cascade analysis runtime. Traces how business disruptions propagate across six dimensions. Alternative to SWOT/Porter's for multi-dimensional impact analysis.",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "type": "module",
   "bin": {
