@@ -189,7 +189,8 @@ function transformForage(stmt: ForageStatement, plan: ActionPlan): void {
   const transformedFilters = (stmt.where || []).map((filter: any) => ({
     field: filter.left,      // Grammar uses "left" for field name
     operator: filter.operator,
-    value: filter.right      // Grammar uses "right" for comparison value
+    value: filter.right,     // Grammar uses "right" for comparison value
+    ...(filter.logic ? { logic: filter.logic } : {})  // AND / OR join with the previous condition
   }));
 
   plan.actions.push({

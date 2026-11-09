@@ -432,8 +432,10 @@ OnDateClause
 
 ConditionList
   = first:Condition rest:(LogicalOp Condition)* {
+      // Keep how each condition joins the previous one ("AND" / "OR").
+      // Evaluation gives AND precedence over OR (see adapters/data).
       if (rest.length === 0) return [first];
-      return [first, ...rest.map(r => r[1])];
+      return [first, ...rest.map(r => Object.assign({}, r[1], { logic: r[0] }))];
     }
 
 Condition

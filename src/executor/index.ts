@@ -22,6 +22,7 @@ import type {
 } from '../types/index.js';
 
 import { SemanticContractViolation } from '../types/index.js';
+import { toFilterConditions } from '../adapters/data/index.js';
 
 import {
   analyze6D,
@@ -299,7 +300,7 @@ export class Executor {
     // Query entities
     const entities = await this.dataAdapter.query(
       target,
-      condition ? [condition] : []
+      toFilterConditions(condition)
     );
 
     // Deep analysis (depth=3)

@@ -213,7 +213,7 @@ CAL Script → PEG Parser → Action Plan → Executor → Results
 - **Executor**: 6-layer pipeline execution (Sense → Analyze → Measure → Decide → Act → Validate)
 - **Data Adapters**: JSON, memory, composite (pluggable)
 - **Alert Adapters**: Console, file, webhook (pluggable)
-- **Test Suite**: 256 tests across 12 suites
+- **Test Suite**: 265 tests across 13 suites
 
 ## Examples
 
@@ -254,7 +254,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 
 ```bash
 npm install          # Install dependencies
-npm test             # Run 256 tests
+npm test             # Run 265 tests
 npm run build        # Build for production
 npm run typecheck    # Type checking
 ```

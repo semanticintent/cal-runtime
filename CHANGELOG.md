@@ -2,6 +2,16 @@
 
 All notable changes to `@stratiqx/cal-runtime`. Versions 1.2.0 to 1.4.0 were published to npm but not as GitHub releases; they are summarised here from the git history.
 
+## 1.6.1 — 2026-11-09
+
+Bug fixes. Matches CAL specification v1.2.2.
+
+- **`OR` now works in `WHERE` and `WHEN`.** The parser dropped the logical operator and the data adapter required every condition, so `WHERE a OR b` behaved like `WHERE a AND b` (for example, `type = "x" OR type = "y"` returned nothing). Conditions now record how they join (`logic: "AND" | "OR"`), and `AND` binds tighter than `OR`: `a AND b OR c` means `(a AND b) OR c`. Conditions without a `logic` field are still joined with `AND`, so existing plans behave as before.
+- **`DIVE … WHEN` no longer throws.** The executor wrapped the condition list in another array, so any `DIVE` with `WHEN` failed with "Cannot read properties of undefined (reading 'split')".
+- New exports from the data adapter module: `matchesConditions` and `toFilterConditions`.
+- Published StratIQX cases are unaffected: none use `OR` in `FORAGE` or `DIVE`; four use it in `WATCH` triggers (UC-096, UC-106, UC-112, UC-137), which are stored, not evaluated, and now record the `OR` their authors wrote.
+- Tests: 265 (9 new for conditions).
+
 ## 1.6.0 — 2026-11-09
 
 No change in behaviour.

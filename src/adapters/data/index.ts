@@ -16,6 +16,63 @@ export interface FilterCondition {
   field: string;
   operator: '=' | '!=' | '>' | '<' | '>=' | '<=';
   value: any;
+  /** How this condition joins the previous one. Absent = AND (backward compatible). */
+  logic?: 'AND' | 'OR';
+}
+
+/**
+ * Convert grammar conditions ({ left, operator, right, logic }) to filter
+ * conditions ({ field, operator, value, logic }). Already-converted filters
+ * pass through unchanged.
+ */
+export function toFilterConditions(conditions: any[] | null | undefined): FilterCondition[] {
+  if (!Array.isArray(conditions)) return [];
+  return conditions.map((c: any) =>
+    'field' in c
+      ? c
+      : { field: c.left, operator: c.operator, value: c.right, ...(c.logic ? { logic: c.logic } : {}) }
+  );
+}
+
+function getNestedValue(obj: any, path: string): any {
+  if (typeof path !== 'string') return undefined;
+  return path.split('.').reduce((current, key) => current?.[key], obj);
+}
+
+function evaluateCondition(value: any, operator: string, expected: any): boolean {
+  switch (operator) {
+    case '=':
+      return value === expected;
+    case '!=':
+      return value !== expected;
+    case '>':
+      return value > expected;
+    case '<':
+      return value < expected;
+    case '>=':
+      return value >= expected;
+    case '<=':
+      return value <= expected;
+    default:
+      return false;
+  }
+}
+
+/**
+ * True when the entity satisfies the filters. AND binds tighter than OR:
+ * "a AND b OR c" means "(a AND b) OR c". Filters without a logic field are
+ * joined with AND, which matches the behaviour before OR was supported.
+ */
+export function matchesConditions(entity: Entity, filters: FilterCondition[] | undefined): boolean {
+  if (!filters || filters.length === 0) return true;
+  const groups: FilterCondition[][] = [[]];
+  filters.forEach((f, i) => {
+    if (i > 0 && f.logic === 'OR') groups.push([]);
+    groups[groups.length - 1].push(f);
+  });
+  return groups.some(group =>
+    group.every(f => evaluateCondition(getNestedValue(entity, f.field), f.operator, f.value))
+  );
 }
 
 /**
@@ -74,33 +131,7 @@ export class MemoryDataAdapter implements DataAdapter {
   }
 
   private matchesFilters(entity: Entity, filters: FilterCondition[]): boolean {
-    return filters.every(filter => {
-      const value = this.getNestedValue(entity, filter.field);
-      return this.evaluateCondition(value, filter.operator, filter.value);
-    });
-  }
-
-  private getNestedValue(obj: any, path: string): any {
-    return path.split('.').reduce((current, key) => current?.[key], obj);
-  }
-
-  private evaluateCondition(value: any, operator: string, expected: any): boolean {
-    switch (operator) {
-      case '=':
-        return value === expected;
-      case '!=':
-        return value !== expected;
-      case '>':
-        return value > expected;
-      case '<':
-        return value < expected;
-      case '>=':
-        return value >= expected;
-      case '<=':
-        return value <= expected;
-      default:
-        return false;
-    }
+    return matchesConditions(entity, filters);
   }
 }
 
@@ -174,33 +205,7 @@ export class JSONDataAdapter implements DataAdapter {
   }
 
   private matchesFilters(entity: Entity, filters: FilterCondition[]): boolean {
-    return filters.every(filter => {
-      const value = this.getNestedValue(entity, filter.field);
-      return this.evaluateCondition(value, filter.operator, filter.value);
-    });
-  }
-
-  private getNestedValue(obj: any, path: string): any {
-    return path.split('.').reduce((current, key) => current?.[key], obj);
-  }
-
-  private evaluateCondition(value: any, operator: string, expected: any): boolean {
-    switch (operator) {
-      case '=':
-        return value === expected;
-      case '!=':
-        return value !== expected;
-      case '>':
-        return value > expected;
-      case '<':
-        return value < expected;
-      case '>=':
-        return value >= expected;
-      case '<=':
-        return value <= expected;
-      default:
-        return false;
-    }
+    return matchesConditions(entity, filters);
   }
 }
 
