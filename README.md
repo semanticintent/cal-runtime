@@ -3,7 +3,7 @@
 **Cascade Analysis Language — Deterministic Execution Engine**
 
 [![npm](https://img.shields.io/npm/v/@stratiqx/cal-runtime)](https://www.npmjs.com/package/@stratiqx/cal-runtime)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18905193.svg)](https://doi.org/10.5281/zenodo.18905193)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18905192.svg)](https://doi.org/10.5281/zenodo.18905192)
 [![Tests](https://img.shields.io/badge/tests-251%20passing-brightgreen)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -244,8 +244,8 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 
 | DOI | Artifact |
 |-----|----------|
-| [10.5281/zenodo.18905193](https://doi.org/10.5281/zenodo.18905193) | CAL Runtime |
-| [10.5281/zenodo.18209946](https://doi.org/10.5281/zenodo.18209946) | 6D Methodology |
+| [10.5281/zenodo.18905192](https://doi.org/10.5281/zenodo.18905192) | CAL Runtime |
+| [10.5281/zenodo.18209945](https://doi.org/10.5281/zenodo.18209945) | 6D Methodology |
 | [10.5281/zenodo.18904952](https://doi.org/10.5281/zenodo.18904952) | Cormorant Foraging Framework |
 | [10.5281/zenodo.17114972](https://doi.org/10.5281/zenodo.17114972) | Semantic Intent SSOT |
 | [10.5281/zenodo.18905197](https://doi.org/10.5281/zenodo.18905197) | CAL Documentation |
@@ -268,7 +268,7 @@ npm run typecheck    # Type checking
   year = {2026},
   publisher = {Zenodo},
   url = {https://github.com/semanticintent/cal-runtime},
-  doi = {10.5281/zenodo.18905193},
+  doi = {10.5281/zenodo.18905192},
   note = {ORCID: 0009-0006-2011-3258}
 }
 ```
