@@ -2,7 +2,7 @@
 
 All notable changes to `@stratiqx/cal-runtime`. Versions 1.2.0 to 1.4.0 were published to npm but not as GitHub releases; they are summarised here from the git history.
 
-## 1.6.0 — unreleased
+## 1.6.0 — 2026-11-09
 
 No change in behaviour.
 
