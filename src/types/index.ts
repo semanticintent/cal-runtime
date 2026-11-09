@@ -96,18 +96,20 @@ export type DriftQuality = 'optimal' | 'moderate' | 'minimal' | 'extreme';
 /**
  * Fetch Decision Levels - Semantic Readiness States
  *
- * SEMANTIC MEANING (SKILL.md fixed bands):
- * - EXECUTE: Act immediately (fetchScore >= 1000, High Priority >= 2000)
- * - CONFIRM: Verify before acting (fetchScore >= 750)
- * - QUEUE: Schedule for later (fetchScore >= 500)
- * - WAIT: Continue monitoring (fetchScore < 500)
- *
- * DETERMINATION: Based on observable score vs semantic thresholds.
+ * SEMANTIC MEANING (fractions of the threshold T, CAL spec v1.2):
+ * - EXECUTE: Act immediately (fetchScore >= T; high priority >= 2T)
+ * - CONFIRM: Verify before acting (fetchScore >= 0.75T)
+ * - QUEUE: Schedule for later (fetchScore >= 0.5T)
+ * - WAIT: Continue monitoring (fetchScore < 0.5T)
+ * At T = 1,000: 2,000 / 1,000 / 750 / 500.
  */
 export type FetchLevel = 'EXECUTE' | 'CONFIRM' | 'QUEUE' | 'WAIT';
 
 /**
- * Cascade Levels - Semantic Probability Categories
+ * Cascade Levels - severity labels for the 3D Lens score
+ *
+ * The probabilities in brackets are assumptions, not measured, and are
+ * deprecated since 1.6.0 (removal in 2.0.0). The level labels remain.
  *
  * SEMANTIC RANGES (based on dimension score):
  * - minimal: < 15 (10% probability)
@@ -902,6 +904,7 @@ export interface DimensionAnalysis {
   score: number;  // Semantic formula: (sound × space × time) / 10
   cascade: {
     level: CascadeLevel;
+    /** @deprecated since 1.6.0, removed in 2.0.0: assumed, not measured. */
     probability: number;
     label: string;
   };
@@ -993,6 +996,7 @@ export interface CascadeLink {
   to: DimensionID;
   name: string;
   score: number;
+  /** @deprecated since 1.6.0, removed in 2.0.0: assumed 20% decay per level, not measured. */
   probability: number;
   level: number;
 }

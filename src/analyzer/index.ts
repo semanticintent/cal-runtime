@@ -62,7 +62,13 @@ export function calculate3DScore(signals: DimensionSignal): number {
 /**
  * Determine cascade probability from 3D score
  *
- * Semantic Anchoring: Observable score thresholds from empirical data
+ * @deprecated since 1.6.0, to be removed in 2.0.0 (the `probability` value;
+ * the severity `level` label of the 3D Lens score may be kept). The
+ * percentages below are fixed assumptions, not derived from data. The 6D
+ * methodology (v2) reports counted cascade patterns from the published case
+ * library instead of probabilities.
+ *
+ * Assumed thresholds (not empirically validated):
  * - critical (≥70): Almost certain (90%)
  * - high (≥50): Likely (70%)
  * - medium (≥30): May occur (50%)
@@ -611,7 +617,7 @@ export function generateCascadePathways(
         if (!analysis.dimensions[targetId]) continue;
 
         const target = analysis.dimensions[targetId];
-        // Probability degrades by 20% per level
+        // Deprecated (removal in 2.0.0): an assumed 20% decay per level, not measured
         const probability = Math.round(origin.cascade.probability * (1 - level * 0.2) * 100) / 100;
 
         cascades.push({

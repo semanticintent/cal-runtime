@@ -2,6 +2,13 @@
 
 All notable changes to `@stratiqx/cal-runtime`. Versions 1.2.0 to 1.4.0 were published to npm but not as GitHub releases; they are summarised here from the git history.
 
+## 1.6.0 — unreleased
+
+No change in behaviour.
+
+- **Deprecated the cascade probabilities:** `cascadeProbability()`'s `probability`, the `probability` field on dimension analyses and on `CascadeLink` (the assumed 20% decay per level). The percentages were fixed assumptions described as empirical; the 6D methodology (v2) reports counted cascade patterns from the published case library instead. The severity level labels of the 3D Lens score remain. Removal in 2.0.0.
+- `FetchLevel` documentation now states the threshold-relative bands (the 1.5.0 behaviour).
+
 ## 1.5.0 — 2026-11-09
 
 Matches CAL specification v1.2.0.
