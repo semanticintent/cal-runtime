@@ -736,6 +736,8 @@ export type FetchResult = Readonly<{
   fetchScore: number;
   threshold: number;
   level: FetchLevel;
+  /** True when fetchScore >= 2 × threshold (EXECUTE, high priority). */
+  highPriority: boolean;
   components: Readonly<{
     chirp: number;
     drift: number;

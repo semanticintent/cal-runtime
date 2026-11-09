@@ -235,23 +235,26 @@ export function calculateDrift(
  * Calculate FETCH: Chirp × |DRIFT| × Confidence
  *
  * Semantic Contract: Action decision based on observable factors
- * - Chirp: Urgency signal (0-100, from 3D Lens average score)
- * - |DRIFT|: Gap magnitude (absolute value of drift)
- * - Confidence: Readiness level (0-1, from min(Perch, Wake))
+ * - Chirp: average of the scored D1-D6 dimensions (0-100), see calculateChirp
+ * - |DRIFT|: gap magnitude, |Methodology - Performance|
+ * - Confidence: the analyst's rating of evidence quality, 0-1 (how well
+ *   sourced the analysis is). Values > 1 are read as percentages.
  *
- * Decision Levels (threshold-based):
- * - EXECUTE: fetchScore > threshold
- * - CONFIRM: fetchScore > threshold × 0.5
- * - QUEUE: fetchScore > threshold × 0.1
- * - WAIT: fetchScore ≤ threshold × 0.1
+ * Decision levels, as fractions of the threshold T (CAL spec v1.2):
+ * - EXECUTE: fetchScore >= T  (high priority when fetchScore >= 2T)
+ * - CONFIRM: fetchScore >= 0.75T
+ * - QUEUE:   fetchScore >= 0.5T
+ * - WAIT:    below 0.5T
+ * At T = 1,000 these are 2,000 / 1,000 / 750 / 500, the bands every
+ * published case has used.
  *
  * Observable Properties: All inputs are directly measurable
  * Formula: Multiply three observable factors
  *
- * @param chirp - Urgency signal (0-100)
+ * @param chirp - Average of scored dimensions (0-100)
  * @param drift - Gap magnitude (absolute value)
- * @param confidence - Readiness (0-1)
- * @param threshold - Action threshold
+ * @param confidence - Evidence quality (0-1)
+ * @param threshold - Action threshold T (must be > 0)
  * @returns Immutable FETCH result with decision level
  */
 export function calculateFetch(
@@ -260,8 +263,14 @@ export function calculateFetch(
   confidence: number,
   threshold: number = 1000
 ): FetchResult {
+  if (!(threshold > 0)) {
+    throw new SemanticContractViolation(
+      `FETCH threshold must be greater than 0 (got ${threshold}). ` +
+      `Decision levels are fractions of the threshold.`
+    );
+  }
+
   // Normalize confidence: PEG grammar parses CONFIDENCE as integer (e.g., 85)
-  // SKILL.md expects 0-1 scale. Normalize if > 1.
   if (confidence > 1) {
     confidence = confidence / 100;
   }
@@ -269,22 +278,21 @@ export function calculateFetch(
   // Calculate fetch score using semantic formula
   const fetchScore = chirp * drift * confidence;
 
-  // SKILL.md fixed threshold bands (with CONFIRM retained)
+  // Levels as fractions of the threshold (CAL spec v1.2)
+  const highPriority = fetchScore >= 2 * threshold;
   let level: FetchLevel;
-  if (fetchScore >= 2000) {
-    level = 'EXECUTE';      // High Priority
-  } else if (fetchScore >= 1000) {
+  if (fetchScore >= threshold) {
     level = 'EXECUTE';
-  } else if (fetchScore >= 750) {
+  } else if (fetchScore >= 0.75 * threshold) {
     level = 'CONFIRM';
-  } else if (fetchScore >= 500) {
+  } else if (fetchScore >= 0.5 * threshold) {
     level = 'QUEUE';
   } else {
     level = 'WAIT';
   }
 
   // Generate recommendation
-  const recommendation = fetchScore >= 2000
+  const recommendation = highPriority
     ? `Score: ${fetchScore.toFixed(2)} | Level: EXECUTE (High Priority)`
     : `Score: ${fetchScore.toFixed(2)} | Level: ${level}`;
 
@@ -294,6 +302,7 @@ export function calculateFetch(
     fetchScore,
     threshold,
     level,
+    highPriority,
     components: Object.freeze({
       chirp,
       drift,
@@ -312,12 +321,12 @@ export function calculateFetch(
 /**
  * Estimate cost multiplier: f(dimensions × depth)
  *
- * Semantic Contract: Financial impact grows with cascade scope
- * - More dimensions affected = wider impact
- * - Greater cascade depth = longer chains
- * - Multiplier = base value of (dimensions × depth)
+ * @deprecated since 1.5.0, to be removed in 2.0.0. The ranges below are a
+ * heuristic with no published evidence behind them, and the 6D methodology
+ * (v2) no longer uses a cascade multiplier: dimensions hit and cascade depth
+ * are reported directly instead. Kept only so existing callers do not break.
  *
- * Observable Thresholds (empirically derived):
+ * Heuristic ranges (not empirically validated):
  * - Extreme (≥15): 10-15× multiplier
  * - Severe (≥10): 6-10× multiplier
  * - Significant (≥6): 4-6× multiplier
@@ -351,6 +360,9 @@ export function estimateMultiplier(
 
 /**
  * Calculate financial impact: baseCost × multiplier
+ *
+ * @deprecated since 1.5.0, to be removed in 2.0.0. Built on estimateMultiplier,
+ * which is a heuristic with no published evidence behind it.
  *
  * @param baseCost - Original cost estimate
  * @param multiplier - Cascade multiplier range

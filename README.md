@@ -188,7 +188,7 @@ const drift = calculateDrift(85, 35);   // methodology, performance
 const fetch = calculateFetch(82.67, drift.absDrift, 0.9, 1000);
 // chirp, drift, confidence (0-1 — normalized automatically if given as
 // a percentage integer, e.g. 90), threshold
-// { fetchScore: 3720.15, level: 'EXECUTE', components: {...}, recommendation: '...' }
+// { fetchScore: 3720.15, level: 'EXECUTE', highPriority: true, components: {...}, recommendation: '...' }
 ```
 
 ### CLI
@@ -213,7 +213,7 @@ CAL Script → PEG Parser → Action Plan → Executor → Results
 - **Executor**: 6-layer pipeline execution (Sense → Analyze → Measure → Decide → Act → Validate)
 - **Data Adapters**: JSON, memory, composite (pluggable)
 - **Alert Adapters**: Console, file, webhook (pluggable)
-- **Test Suite**: 251 tests across 11 suites
+- **Test Suite**: 256 tests across 12 suites
 
 ## Examples
 
@@ -254,7 +254,7 @@ The [`examples/`](./examples/) directory contains runnable CAL scripts:
 
 ```bash
 npm install          # Install dependencies
-npm test             # Run 251 tests
+npm test             # Run 256 tests
 npm run build        # Build for production
 npm run typecheck    # Type checking
 ```

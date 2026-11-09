@@ -8,7 +8,7 @@ authors:
     orcid: "https://orcid.org/0009-0006-2011-3258"
 repository-code: "https://github.com/semanticintent/cal-runtime"
 url: "https://cal.semanticintent.dev"
-doi: "10.5281/zenodo.18905193"
+doi: "10.5281/zenodo.18905192"
 abstract: >-
   CAL (Cormorant Agentic Language) Runtime is a deterministic execution engine
   for cascade analysis using the Cormorant Foraging methodology. It provides a
@@ -17,7 +17,7 @@ abstract: >-
   for data sources and alert channels. CAL encodes the Cormorant Foraging Framework
   directly into language syntax — keywords like FORAGE, DRIFT, FETCH, CHIRP, PERCH,
   and WAKE map to framework layers, making methodology executable rather than
-  descriptive. 192 passing tests validate the complete pipeline.
+  descriptive. 256 passing tests validate the complete pipeline.
 keywords:
   - domain-specific-language
   - cormorant-agentic-language
@@ -30,8 +30,8 @@ keywords:
   - intelligence-systems
   - biomimetic-framework
 license: MIT
-version: 1.0.0
-date-released: "2026-03-07"
+version: 1.5.0
+date-released: "2026-11-09"
 references:
   - type: software
     title: "Cormorant Foraging Framework: A Multi-Layered Architecture for Intelligence Systems"
