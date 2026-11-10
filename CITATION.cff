@@ -30,8 +30,8 @@ keywords:
   - intelligence-systems
   - biomimetic-framework
 license: MIT
-version: 1.6.1
-date-released: "2026-11-09"
+version: 1.7.0
+date-released: "2026-11-10"
 references:
   - type: software
     title: "Cormorant Foraging Framework: A Multi-Layered Architecture for Intelligence Systems"
