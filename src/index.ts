@@ -15,6 +15,10 @@ export { Executor } from './executor/index.js';
 // the executor (e.g. validating or generating a pre-authored score).
 export { calculateDrift, calculateFetch } from './analyzer/index.js';
 
+// Benchmarks (optional, cited ratios; replace the retired cascade multiplier)
+export { sectorReach, eventRatio, measuredMultiplier, BenchmarkError, BENCHMARK_RULES, EXCLUDED_FOLKLORE, BENCHMARKS_VERSION } from './benchmarks/index.js';
+export type { SectorReach, EventRatioResult, EventRatioKind, BeaLevel } from './benchmarks/index.js';
+
 // Adapters
 export { createDataAdapter } from './adapters/data/index.js';
 export { createAlertAdapter } from './adapters/alerts/index.js';

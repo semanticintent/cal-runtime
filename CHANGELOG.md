@@ -2,6 +2,19 @@
 
 All notable changes to `@stratiqx/cal-runtime`. Versions 1.2.0 to 1.4.0 were published to npm but not as GitHub releases; they are summarised here from the git history.
 
+## 1.7.0 — unreleased
+
+New, optional. Matches CAL specification v1.3.0 (Benchmarks). No change to FETCH, DRIFT or any existing result.
+
+- **Benchmarks** replace the retired cascade multiplier with cited ratios that the runtime computes; a case supplies inputs only.
+  - `sectorReach(code, year?)`: the U.S. Bureau of Economic Analysis output multiplier for an industry (Industry-by-Industry Total Requirements, row *Total industry output requirement*), 1997–2023, 15 sectors and 71 summary industries. Uses the latest BEA year at or before the case year.
+  - `eventRatio(id, directCost?)`: a published hidden-cost ratio for one kind of event, from registry 1.0.0 (OSHA *$afety Pays*; Armour, Mayer & Polo 2017; Karpoff, Lee & Martin 2008; Jarrell & Peltzman 1985; Hallegatte 2008; IBM/Ponemon 2025; Boushey & Glynn 2012). Every entry checked at its primary source on 2026-11-10. Tiered entries need the case's direct cost.
+  - `measuredMultiplier(first, final)`: final cost ÷ first reported cost.
+  - `BenchmarkError` for an unknown code or entry, a missing direct cost, or a size outside every tier.
+  - `BENCHMARK_RULES`, `EXCLUDED_FOLKLORE` (Heinrich 4:1, Bird's iceberg, SHRM 6–9 months, the 5–25× customer rule, 1:10:100, Gartner $5,600/min), `BENCHMARKS_VERSION`.
+- Data lives in `data/benchmarks/`; `node scripts/build-benchmarks.mjs` regenerates `src/benchmarks/data.ts`.
+- Tests: 276 (11 new for benchmarks).
+
 ## 1.6.1 — 2026-11-09
 
 Bug fixes. Matches CAL specification v1.2.2.

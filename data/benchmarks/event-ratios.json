@@ -1,0 +1,178 @@
+{
+ "version": "1.0.0",
+ "verified": "2026-11-10",
+ "rules": [
+  "A case uses an entry only when its event type, firm type and size tier match the entry's scope. Matching is a lookup, not a judgement.",
+  "The case must carry a sourced direct cost when the entry has tiers, so the tier can be picked.",
+  "Ratios are shown per dimension with citation and scope. They are never added together or blended into one multiplier.",
+  "Market-value ratios (kind = market_value) are share-price losses at listed firms, not cash costs. Never add them to cost ratios.",
+  "If nothing matches, nothing is shown."
+ ],
+ "entries": [
+  {
+   "id": "osha-injury-indirect",
+   "dimension": "D2",
+   "also": [
+    "D6"
+   ],
+   "event": "workplace injury",
+   "kind": "cost_ratio",
+   "measures": "indirect cost / direct cost (workers' compensation) per injury",
+   "tiers": [
+    {
+     "min": 0,
+     "max": 3000,
+     "ratio": 4.5
+    },
+    {
+     "min": 3000,
+     "max": 5000,
+     "ratio": 1.6
+    },
+    {
+     "min": 5000,
+     "max": 10000,
+     "ratio": 1.2
+    },
+    {
+     "min": 10000,
+     "max": null,
+     "ratio": 1.1
+    }
+   ],
+   "scope": "Construction injuries; OSHA calls them general estimates from limited research. Excludes fines, liability and goodwill.",
+   "source": "OSHA, $afety Pays Background (ratios from Business Roundtable, Improving Construction Safety Performance; Stanford study, year not stated on the page)",
+   "url": "https://www.osha.gov/safetypays/background",
+   "grade": "moderate",
+   "verified": "2026-11-10, primary page",
+   "tier_basis": "direct cost of the injury, USD"
+  },
+  {
+   "id": "armour-fsa-fine",
+   "dimension": "D4",
+   "lands": [
+    "D3",
+    "D1"
+   ],
+   "event": "regulatory fine for misconduct harming customers or investors",
+   "kind": "market_value",
+   "measures": "share-price (reputational) loss / fine",
+   "ratio": 9,
+   "quote": "reputational losses are nearly nine times the size of fines and are associated with misconduct harming customers or investors but not third parties",
+   "scope": "Listed firms; UK FSA and LSE enforcement. No reputational loss found where only third parties were harmed.",
+   "source": "Armour, Mayer & Polo (2017), JFQA 52(4): 1429-1448, doi:10.1017/S0022109017000461",
+   "url": "https://papers.ssrn.com/abstract=1640884",
+   "grade": "strong",
+   "verified": "2026-11-10, abstract"
+  },
+  {
+   "id": "karpoff-misrepresentation",
+   "dimension": "D4",
+   "lands": [
+    "D3"
+   ],
+   "event": "SEC enforcement for financial misrepresentation",
+   "kind": "market_value",
+   "measures": "reputational loss / all legal and regulatory penalties",
+   "ratio": 7.5,
+   "quote": "over 7.5 times the sum of all penalties imposed through the legal and regulatory system",
+   "scope": "585 US listed firms, 1978-2002",
+   "source": "Karpoff, Lee & Martin (2008), JFQA 43(3): 581-611, doi:10.1017/S0022109000004221",
+   "url": "https://www.cambridge.org/core/journals/journal-of-financial-and-quantitative-analysis/article/cost-to-firms-of-cooking-the-books/4BFFF52B30A4997F2ED5EA8BDA69CD1A",
+   "grade": "strong",
+   "verified": "2026-11-10"
+  },
+  {
+   "id": "jarrell-peltzman-drug-recall",
+   "dimension": "D5",
+   "lands": [
+    "D3"
+   ],
+   "event": "major drug or medical-device recall",
+   "kind": "market_value",
+   "measures": "equity value loss / estimated direct recall cost",
+   "ratio": 12,
+   "quote": "The mean CER (-4, 5) is -6.13%, which is fully twelve times the mean relative direct cost of 0.53%",
+   "scope": "32 drug and device recalls, listed firms, 1974-82. Drug recalls only, not autos. Jovanovic (2021) calibrates 6x as an average across later papers; that is his choice, not a published finding.",
+   "source": "Jarrell & Peltzman (1985), JPE 93(3): 512-536; quote from Stigler Center WP 033 (1984), p. 11",
+   "url": "https://www.econstor.eu/bitstream/10419/262435/1/wp033.pdf",
+   "grade": "strong, old",
+   "verified": "2026-11-10, working paper"
+  },
+  {
+   "id": "hallegatte-disaster",
+   "dimension": "D6",
+   "lands": [
+    "D3"
+   ],
+   "event": "natural disaster, regional economy",
+   "kind": "cost_ratio",
+   "measures": "total (direct + indirect) losses / direct losses",
+   "tiers": [
+    {
+     "min": 50000000000.0,
+     "max": 200000000000.0,
+     "ratio": 1.39,
+     "note": "Katrina point: total 149B / direct 107B"
+    },
+    {
+     "min": 200000000000.0,
+     "max": null,
+     "ratio": 2.0,
+     "note": "stated: total about twice direct above 200B"
+    }
+   ],
+   "scope": "Modelled (adaptive regional input-output), Louisiana / Katrina. Regional economy, not a firm. No ratio is stated below 50B direct, so none is given there.",
+   "source": "Hallegatte (2008), Risk Analysis 28(3): 779-799, doi:10.1111/j.1539-6924.2008.01046.x",
+   "url": "https://econpapers.repec.org/RePEc:wly:riskan:v:28:y:2008:i:3:p:779-799",
+   "grade": "strong method, model-dependent",
+   "verified": "2026-11-10, abstract",
+   "tier_basis": "direct losses of the disaster, USD"
+  },
+  {
+   "id": "ibm-breach-lost-business",
+   "dimension": "D1",
+   "lands": [
+    "D3"
+   ],
+   "event": "data breach",
+   "kind": "cost_share",
+   "measures": "lost business (downtime, lost customers, reputation) as a share of total breach cost",
+   "share": 0.31,
+   "detail": "2025: lost business 1.38 of 4.44 USD M; detection and escalation 1.47; post-breach response 1.20; notification 0.39",
+   "scope": "600 organisations, 17 industries, 16 countries, breaches Mar 2024-Feb 2025. Vendor-sponsored, consistent yearly method. 2026 average 4.99 USD M, no public category split.",
+   "source": "IBM / Ponemon, Cost of a Data Breach Report 2025, p. 13, Fig. 5",
+   "url": "https://www.ibm.com/reports/data-breach",
+   "grade": "strong method",
+   "verified": "2026-11-10, full report"
+  },
+  {
+   "id": "cap-turnover",
+   "dimension": "D2",
+   "event": "employee leaves and is replaced",
+   "kind": "sizing",
+   "measures": "replacement cost / annual salary",
+   "median": 0.21,
+   "range_note": "20% for jobs under $50k; up to 213% at the top of the range for very senior roles",
+   "scope": "30 case studies from 11 papers, 1992-2007. Sizes one dimension; not a hidden/visible multiplier. Not for layoffs.",
+   "source": "Boushey & Glynn (2012), Center for American Progress, There Are Significant Business Costs to Replacing Employees",
+   "url": "https://cdn.americanprogress.org/wp-content/uploads/2012/11/CostofTurnover.pdf",
+   "grade": "moderate",
+   "verified": "2026-11-10, PDF"
+  }
+ ],
+ "held_back": [
+  {
+   "id": "hse-hsg96",
+   "why": "Primary text unreachable (withdrawn); secondary sources disagree on the denominator and trace it to four case studies."
+  }
+ ],
+ "excluded_folklore": [
+  "Heinrich 4:1 indirect:direct accident cost (1931; no surviving data)",
+  "Bird iceberg $5-50 hidden per $1 (no traceable cost study)",
+  "SHRM 6-9 months of salary to replace (no primary study found)",
+  "Acquiring a customer costs 5-25x keeping one (no cited study; Reinartz & Kumar 2002 contradict)",
+  "1:10:100 / IBM Systems Sciences Institute 100x defect cost (course notes; Menzies et al. 2017 found no effect)",
+  "Gartner $5,600 per minute downtime (blog average, no method)"
+ ]
+}
